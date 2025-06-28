@@ -196,6 +196,12 @@
         <div class="ribbon"></div>
     </div>
 
+    <div class="countdown">
+        <span id="days">00</span>天
+        <span id="hours">00</span>时
+    </div>
+    <div class="celebration"></div>
+
     <script>
         let hasTriggered = false;
         let countdownInterval;
@@ -251,10 +257,14 @@
             
             const endText = document.createElement('div');
             endText.className = 'countdown-end';
-            endText.textContent = '犯人勿扰';
+            endText.textContent = '
+                
+                
+            
+            犯人勿扰';
             document.body.appendChild(endText);
 
-            createConfetti(0);
+            createConfetti(50);
             createFireworks(5);
             document.body.style.background = 'linear-gradient(45deg, #ff0000, #ffd700)';
             playCelebrationMusic();
