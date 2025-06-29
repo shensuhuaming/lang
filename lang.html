@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>孤雨之境 · 时光</title>
+    <title>孤雨之境 · 故事记录</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -138,72 +138,198 @@
             text-transform: uppercase;
         }
 
-        /* 礼物盒样式 */
-        .gift-box {
-            width: 120px;
-            height: 120px;
-            background: linear-gradient(135deg, #1e3c5f, #142a4a);
+        /* 记录故事按钮 */
+        .record-btn {
             position: fixed;
             bottom: 30px;
-            right: 30px;
+            left: 30px;
+            background: linear-gradient(135deg, #1e3c5f, #142a4a);
+            color: #c0d0e0;
+            border: 1px solid rgba(100, 150, 200, 0.2);
+            border-radius: 50%;
+            width: 80px;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             cursor: pointer;
-            transition: transform 0.5s;
-            border-radius: 12px;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
             z-index: 100;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        .record-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .record-btn i {
+            font-size: 2.5rem;
+            color: #5d8aa8;
+            text-shadow: 0 0 10px rgba(100, 150, 255, 0.3);
+        }
+
+        /* 故事记录面板 */
+        .story-panel {
+            position: fixed;
+            top: 0;
+            right: -400px;
+            width: 380px;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(20, 42, 74, 0.95), rgba(12, 33, 54, 0.95));
+            z-index: 1000;
+            padding: 30px;
+            transition: right 0.5s ease;
+            box-shadow: -5px 0 25px rgba(0, 0, 0, 0.5);
+            border-left: 1px solid rgba(100, 150, 200, 0.2);
+            overflow-y: auto;
+            backdrop-filter: blur(10px);
+        }
+
+        .story-panel.active {
+            right: 0;
+        }
+
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(100, 150, 200, 0.2);
+        }
+
+        .panel-title {
+            font-size: 1.8rem;
+            color: #c0d0e0;
+            text-shadow: 0 0 10px rgba(100, 150, 255, 0.3);
+        }
+
+        .close-panel {
+            background: transparent;
+            border: none;
+            color: #8a9ba8;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .close-panel:hover {
+            color: #c0d0e0;
+        }
+
+        .story-form {
             display: flex;
             flex-direction: column;
-            justify-content: center;
-            align-items: center;
+            gap: 25px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-label {
+            font-size: 1.1rem;
+            color: #a0b0c0;
+        }
+
+        .form-input, .form-textarea {
+            background: rgba(10, 25, 41, 0.6);
             border: 1px solid rgba(100, 150, 200, 0.2);
-            overflow: hidden;
+            border-radius: 8px;
+            padding: 12px 15px;
+            color: #e0e0e0;
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1rem;
+            transition: all 0.3s;
         }
 
-        .gift-box::before {
-            content: '';
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(45deg, 
-                transparent 0%, 
-                rgba(100, 150, 255, 0.1) 50%, 
-                transparent 100%);
-            animation: gift-glow 3s infinite;
+        .form-input:focus, .form-textarea:focus {
+            outline: none;
+            border-color: #5d8aa8;
+            box-shadow: 0 0 10px rgba(100, 150, 255, 0.3);
         }
 
-        .ribbon {
-            width: 100%;
-            height: 20px;
-            background: linear-gradient(to right, #4a6572, #344955);
-            position: relative;
-            z-index: 2;
+        .form-textarea {
+            min-height: 150px;
+            resize: vertical;
         }
 
-        .ribbon::before, .ribbon::after {
-            content: '';
-            position: absolute;
-            width: 20px;
-            height: 20px;
-            background: #4a6572;
-            border-radius: 50%;
-            top: -10px;
-            z-index: 1;
+        .upload-area {
+            border: 2px dashed rgba(100, 150, 200, 0.3);
+            border-radius: 8px;
+            padding: 30px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
         }
 
-        .ribbon::before {
-            left: 30px;
+        .upload-area:hover {
+            border-color: #5d8aa8;
+            background: rgba(10, 25, 41, 0.3);
         }
 
-        .ribbon::after {
-            right: 30px;
-        }
-
-        .gift-icon {
-            font-size: 2.8rem;
+        .upload-icon {
+            font-size: 2.5rem;
             color: #5d8aa8;
-            margin-top: 15px;
-            z-index: 2;
-            text-shadow: 0 0 10px rgba(100, 150, 255, 0.3);
+            margin-bottom: 15px;
+        }
+
+        .upload-text {
+            color: #a0b0c0;
+            margin-bottom: 15px;
+        }
+
+        .upload-btn {
+            background: linear-gradient(to right, #4a6572, #344955);
+            color: #e0e0e0;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .upload-btn:hover {
+            background: linear-gradient(to right, #5a7582, #445965);
+        }
+
+        .preview-container {
+            margin-top: 20px;
+            display: none;
+        }
+
+        .preview-title {
+            font-size: 1.1rem;
+            color: #a0b0c0;
+            margin-bottom: 10px;
+        }
+
+        .image-preview {
+            max-width: 100%;
+            max-height: 200px;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .submit-btn {
+            background: linear-gradient(to right, #4a6572, #344955);
+            color: #e0e0e0;
+            border: none;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 20px;
+        }
+
+        .submit-btn:hover {
+            background: linear-gradient(to right, #5a7582, #445965);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
         }
 
         /* 孤树剪影 */
@@ -216,87 +342,6 @@
             height: 300px;
             background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 300"><path d="M100 0 Q150 100 130 150 Q180 200 120 220 Q150 250 100 300 Q50 250 80 220 Q20 200 70 150 Q50 100 100 0" fill="black" opacity="0.3"/></svg>') no-repeat bottom;
             z-index: 5;
-        }
-
-        /* 模态框样式 */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.85);
-            z-index: 1000;
-            justify-content: center;
-            align-items: center;
-            animation: fadeIn 0.5s ease;
-        }
-
-        .modal-content {
-            background: linear-gradient(135deg, #142a4a, #0c2136);
-            width: 80%;
-            max-width: 500px;
-            padding: 40px;
-            border-radius: 20px;
-            text-align: center;
-            box-shadow: 0 0 40px rgba(50, 100, 150, 0.3);
-            position: relative;
-            border: 1px solid rgba(100, 150, 200, 0.2);
-            transform: scale(0.9);
-            opacity: 0;
-            animation: scaleIn 0.5s ease forwards 0.3s;
-        }
-
-        .modal-content::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            border-radius: 20px;
-            background: linear-gradient(45deg, 
-                transparent 0%, 
-                rgba(100, 150, 255, 0.1) 50%, 
-                transparent 100%);
-            animation: gift-glow 5s infinite;
-            pointer-events: none;
-        }
-
-        .modal-title {
-            font-size: 2.5rem;
-            color: #c0d0e0;
-            margin-bottom: 20px;
-            text-shadow: 0 0 15px rgba(100, 150, 255, 0.3);
-        }
-
-        .modal-message {
-            font-size: 1.3rem;
-            color: #a0b0c0;
-            margin-bottom: 30px;
-            line-height: 1.8;
-        }
-
-        .close-btn {
-            background: linear-gradient(to right, #4a6572, #344955);
-            color: #e0e0e0;
-            border: none;
-            padding: 12px 40px;
-            font-size: 1.2rem;
-            border-radius: 50px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            position: relative;
-            z-index: 2;
-            border: 1px solid rgba(100, 150, 200, 0.2);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-        }
-
-        .close-btn:hover {
-            background: linear-gradient(to right, #5a7582, #445965);
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
         }
 
         /* 动画效果 */
@@ -315,22 +360,6 @@
             100% { text-shadow: 0 0 25px rgba(100, 150, 255, 0.6), 0 0 40px rgba(80, 120, 200, 0.3); }
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        @keyframes scaleIn {
-            from { transform: scale(0.9); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
-        }
-
-        @keyframes gift-glow {
-            0% { opacity: 0.1; }
-            50% { opacity: 0.3; }
-            100% { opacity: 0.1; }
-        }
-
         /* 响应式设计 */
         @media (max-width: 768px) {
             .title {
@@ -343,23 +372,14 @@
             .date-display {
                 font-size: 1.2rem;
             }
-            .gift-box {
-                width: 90px;
-                height: 90px;
+            .record-btn {
+                width: 70px;
+                height: 70px;
                 bottom: 20px;
-                right: 20px;
+                left: 20px;
             }
-            .gift-icon {
-                font-size: 2rem;
-            }
-            .modal-content {
-                padding: 30px 20px;
-            }
-            .modal-title {
-                font-size: 2rem;
-            }
-            .modal-message {
-                font-size: 1.1rem;
+            .story-panel {
+                width: 320px;
             }
         }
         
@@ -381,15 +401,18 @@
             .time-container {
                 padding: 20px 30px;
             }
-            .gift-box {
-                width: 70px;
-                height: 70px;
-                bottom: 15px;
-                right: 15px;
+            .story-panel {
+                width: 100%;
+                right: -100%;
             }
-            .gift-icon {
-                font-size: 1.5rem;
-                margin-top: 10px;
+            .record-btn {
+                width: 60px;
+                height: 60px;
+                bottom: 15px;
+                left: 15px;
+            }
+            .record-btn i {
+                font-size: 2rem;
             }
         }
     </style>
@@ -409,8 +432,8 @@
 
     <!-- 主内容区 -->
     <div class="hero">
-        <h1 class="title">孤雨之境 · 时光</h1>
-        <p class="subtitle">雨滴敲打着时间的节拍，每一秒都在诉说着孤独的故事...</p>
+        <h1 class="title">孤雨之境 · 故事</h1>
+        <p class="subtitle">在雨中，每个故事都像雨滴一样独特而短暂...记录下你的孤雨时刻</p>
         
         <div class="time-container">
             <div class="time-display" id="currentTime">00:00:00</div>
@@ -418,19 +441,48 @@
         </div>
     </div>
 
-    <!-- 礼物盒 -->
-    <div class="gift-box" onclick="openGift()">
-        <div class="ribbon"></div>
-        <i class="fas fa-hourglass gift-icon"></i>
+    <!-- 记录故事按钮 -->
+    <div class="record-btn" id="recordBtn">
+        <i class="fas fa-book"></i>
     </div>
     
-    <!-- 模态框 -->
-    <div id="giftModal" class="modal">
-        <div class="modal-content">
-            <h2 class="modal-title">时光之礼</h2>
-            <p class="modal-message">在这永恒的雨中，时间是最珍贵的礼物。<br>每一滴雨都是时间的碎片，<br>每一秒都是生命的馈赠...</p>
-            <button class="close-btn" onclick="closeModal()">继续旅程</button>
+    <!-- 故事记录面板 -->
+    <div class="story-panel" id="storyPanel">
+        <div class="panel-header">
+            <h2 class="panel-title">记录孤雨故事</h2>
+            <button class="close-panel" id="closePanel">
+                <i class="fas fa-times"></i>
+            </button>
         </div>
+        
+        <form class="story-form" id="storyForm">
+            <div class="form-group">
+                <label class="form-label">故事标题</label>
+                <input type="text" class="form-input" id="storyTitle" placeholder="为你的故事命名..." required>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">你的故事</label>
+                <textarea class="form-textarea" id="storyContent" placeholder="在这片雨中，我感受到..." required></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">上传雨景照片</label>
+                <div class="upload-area" id="uploadArea">
+                    <i class="fas fa-cloud-upload-alt upload-icon"></i>
+                    <p class="upload-text">点击或拖拽照片到此处</p>
+                    <button type="button" class="upload-btn">选择文件</button>
+                    <input type="file" id="imageUpload" accept="image/*" style="display: none;">
+                </div>
+                
+                <div class="preview-container" id="previewContainer">
+                    <p class="preview-title">预览</p>
+                    <img class="image-preview" id="imagePreview" alt="图片预览">
+                </div>
+            </div>
+            
+            <button type="submit" class="submit-btn">保存故事</button>
+        </form>
     </div>
 
     <!-- 雨声音频 -->
@@ -497,24 +549,6 @@
             document.getElementById('currentDate').textContent = `${year}年${month}月${day}日 ${weekday}`;
         }
         
-        // 打开礼物模态框
-        function openGift() {
-            const modal = document.getElementById('giftModal');
-            modal.style.display = 'flex';
-            
-            // 添加动画效果
-            document.querySelector('.gift-box').style.transform = 'rotate(15deg) scale(0.95)';
-            setTimeout(() => {
-                document.querySelector('.gift-box').style.transform = 'rotate(0) scale(1)';
-            }, 300);
-        }
-        
-        // 关闭模态框
-        function closeModal() {
-            const modal = document.getElementById('giftModal');
-            modal.style.display = 'none';
-        }
-        
         // 初始化页面
         window.onload = function() {
             createRain();
@@ -523,6 +557,110 @@
             // 初始化时间显示
             updateLocalTime();
             setInterval(updateLocalTime, 1000);
+            
+            // 故事记录功能
+            const recordBtn = document.getElementById('recordBtn');
+            const storyPanel = document.getElementById('storyPanel');
+            const closePanel = document.getElementById('closePanel');
+            const uploadArea = document.getElementById('uploadArea');
+            const imageUpload = document.getElementById('imageUpload');
+            const imagePreview = document.getElementById('imagePreview');
+            const previewContainer = document.getElementById('previewContainer');
+            const storyForm = document.getElementById('storyForm');
+            
+            // 打开故事面板
+            recordBtn.addEventListener('click', () => {
+                storyPanel.classList.add('active');
+            });
+            
+            // 关闭故事面板
+            closePanel.addEventListener('click', () => {
+                storyPanel.classList.remove('active');
+            });
+            
+            // 上传区域点击事件
+            uploadArea.addEventListener('click', () => {
+                imageUpload.click();
+            });
+            
+            // 文件选择事件
+            imageUpload.addEventListener('change', function(e) {
+                if (this.files && this.files[0]) {
+                    const reader = new FileReader();
+                    
+                    reader.onload = function(e) {
+                        imagePreview.src = e.target.result;
+                        imagePreview.style.display = 'block';
+                        previewContainer.style.display = 'block';
+                    }
+                    
+                    reader.readAsDataURL(this.files[0]);
+                }
+            });
+            
+            // 拖拽上传功能
+            uploadArea.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                this.style.borderColor = '#5d8aa8';
+                this.style.backgroundColor = 'rgba(10, 25, 41, 0.4)';
+            });
+            
+            uploadArea.addEventListener('dragleave', function() {
+                this.style.borderColor = 'rgba(100, 150, 200, 0.3)';
+                this.style.backgroundColor = 'transparent';
+            });
+            
+            uploadArea.addEventListener('drop', function(e) {
+                e.preventDefault();
+                this.style.borderColor = 'rgba(100, 150, 200, 0.3)';
+                this.style.backgroundColor = 'transparent';
+                
+                if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+                    imageUpload.files = e.dataTransfer.files;
+                    
+                    const reader = new FileReader();
+                    
+                    reader.onload = function(e) {
+                        imagePreview.src = e.target.result;
+                        imagePreview.style.display = 'block';
+                        previewContainer.style.display = 'block';
+                    }
+                    
+                    reader.readAsDataURL(e.dataTransfer.files[0]);
+                }
+            });
+            
+            // 表单提交
+            storyForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const title = document.getElementById('storyTitle').value;
+                const content = document.getElementById('storyContent').value;
+                
+                // 创建故事对象
+                const story = {
+                    title: title,
+                    content: content,
+                    date: new Date().toISOString(),
+                    image: imagePreview.src || null
+                };
+                
+                // 保存故事到本地存储
+                let stories = JSON.parse(localStorage.getItem('rainStories')) || [];
+                stories.push(story);
+                localStorage.setItem('rainStories', JSON.stringify(stories));
+                
+                // 显示成功消息
+                alert('故事已保存！在雨中，你的记忆将永存...');
+                
+                // 重置表单
+                storyForm.reset();
+                imagePreview.style.display = 'none';
+                previewContainer.style.display = 'none';
+                
+                // 关闭面板
+                storyPanel.classList.remove('active');
+            });
         };
     </script>
 </body>
