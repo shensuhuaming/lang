@@ -15,7 +15,7 @@
         }
 
         body {
-            min-height: 100vh;
+            min-height: 100dvh;
             background: linear-gradient(135deg, #0a1929, #1a3658, #0c2136);
             font-family: 'Noto Serif SC', serif;
             overflow-x: hidden;
@@ -23,6 +23,8 @@
             position: relative;
             perspective: 1000px;
             touch-action: manipulation;
+            display: flex;
+            flex-direction: column;
         }
 
         /* 雨滴效果 */
@@ -79,7 +81,7 @@
 
         /* 主内容区域 - 移动端优化 */
         .hero {
-            height: 100vh;
+            flex: 1;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -88,15 +90,16 @@
             padding: 15px;
             text-align: center;
             z-index: 10;
+            min-height: 100dvh;
         }
 
         .title {
             color: #f0f0f0;
-            font-size: 2.8rem; /* 减小标题字体大小 */
+            font-size: 2.8rem;
             text-shadow: 0 0 15px rgba(100, 150, 255, 0.3);
-            margin-bottom: 20px; /* 减小下边距 */
+            margin-bottom: 20px;
             line-height: 1.3;
-            letter-spacing: 1px; /* 减小字间距 */
+            letter-spacing: 1px;
             font-weight: 700;
             position: relative;
             animation: title-glow 4s infinite alternate;
@@ -104,11 +107,11 @@
         }
 
         .subtitle {
-            font-size: 1.2rem; /* 减小副标题字体大小 */
+            font-size: 1.2rem;
             color: #a0b0c0;
-            max-width: 90%; /* 增加最大宽度限制 */
+            max-width: 90%;
             line-height: 1.6;
-            margin-bottom: 30px; /* 减小下边距 */
+            margin-bottom: 30px;
             text-shadow: 0 1px 3px rgba(0,0,0,0.5);
             padding: 0 15px;
         }
@@ -116,112 +119,52 @@
         /* 时间显示样式 */
         .time-container {
             background: rgba(10, 25, 41, 0.7);
-            padding: 20px 30px; /* 减小内边距 */
+            padding: 20px 30px;
             border-radius: 15px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
             border: 1px solid rgba(100, 150, 200, 0.2);
             backdrop-filter: blur(8px);
-            margin-top: 20px; /* 减小上边距 */
+            margin-top: 20px;
             text-align: center;
-            width: 90%; /* 增加宽度限制 */
-            max-width: 500px; /* 最大宽度 */
+            width: 90%;
+            max-width: 500px;
         }
 
         .time-display {
-            font-size: 3rem; /* 减小时间字体大小 */
+            font-size: 3rem;
             font-weight: 300;
-            letter-spacing: 3px; /* 减小字间距 */
+            letter-spacing: 3px;
             color: #c0d0e0;
-            margin-bottom: 10px; /* 减小下边距 */
+            margin-bottom: 10px;
             text-shadow: 0 0 20px rgba(100, 150, 255, 0.4);
             font-family: 'Courier New', monospace;
         }
 
         .date-display {
-            font-size: 1.2rem; /* 减小日期字体大小 */
+            font-size: 1.2rem;
             color: #8a9ba8;
-            letter-spacing: 1px; /* 减小字间距 */
+            letter-spacing: 1px;
             text-transform: uppercase;
-        }
-
-        /* 记录故事按钮 - 移动端优化 */
-        .record-btn {
-            position: fixed;
-            bottom: 20px; /* 调整位置 */
-            left: 20px; /* 调整位置 */
-            background: linear-gradient(135deg, #1e3c5f, #142a4a);
-            color: #c0d0e0;
-            border: 1px solid rgba(100, 150, 200, 0.2);
-            border-radius: 50%;
-            width: 70px; /* 减小尺寸 */
-            height: 70px; /* 减小尺寸 */
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            z-index: 100;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
-            transition: all 0.3s ease;
-        }
-
-        .record-btn:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
-        }
-
-        .record-btn i {
-            font-size: 2rem; /* 减小图标大小 */
-            color: #5d8aa8;
-            text-shadow: 0 0 10px rgba(100, 150, 255, 0.3);
-        }
-
-        /* 查看故事按钮 - 移动端优化 */
-        .view-stories-btn {
-            position: fixed;
-            bottom: 100px; /* 调整位置 */
-            left: 20px; /* 调整位置 */
-            background: linear-gradient(135deg, #2a4a7a, #1e3c5f);
-            color: #c0d0e0;
-            border: 1px solid rgba(100, 150, 200, 0.2);
-            border-radius: 50%;
-            width: 60px; /* 减小尺寸 */
-            height: 60px; /* 减小尺寸 */
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            z-index: 100;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
-            transition: all 0.3s ease;
-        }
-
-        .view-stories-btn:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
-        }
-
-        .view-stories-btn i {
-            font-size: 1.8rem; /* 减小图标大小 */
-            color: #8ab6d6;
-            text-shadow: 0 0 10px rgba(100, 150, 255, 0.3);
         }
 
         /* 故事记录面板 - 移动端优化 */
         .story-panel {
             position: fixed;
             top: 0;
-            right: -100%; /* 调整为从右侧滑入 */
-            width: 100%; /* 移动设备上全宽 */
-            height: 100%;
+            right: -100%;
+            width: 100%;
+            height: 100dvh;
             background: linear-gradient(135deg, rgba(20, 42, 74, 0.95), rgba(12, 33, 54, 0.95));
             z-index: 1000;
-            padding: 20px; /* 减小内边距 */
+            padding: 20px;
             transition: transform 0.5s ease;
             box-shadow: -5px 0 25px rgba(0, 0, 0, 0.5);
             border-left: 1px solid rgba(100, 150, 200, 0.2);
             overflow-y: auto;
             backdrop-filter: blur(10px);
             transform: translateX(100%);
+            display: flex;
+            flex-direction: column;
         }
 
         .story-panel.active {
@@ -233,13 +176,13 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px; /* 减小下边距 */
-            padding-bottom: 10px; /* 减小内边距 */
+            margin-bottom: 20px;
+            padding-bottom: 10px;
             border-bottom: 1px solid rgba(100, 150, 200, 0.2);
         }
 
         .panel-title {
-            font-size: 1.8rem; /* 减小标题字体大小 */
+            font-size: 1.8rem;
             color: #c0d0e0;
             text-shadow: 0 0 10px rgba(100, 150, 255, 0.3);
         }
@@ -251,7 +194,7 @@
             font-size: 1.5rem;
             cursor: pointer;
             transition: color 0.3s;
-            padding: 10px; /* 增加触摸区域 */
+            padding: 10px;
         }
 
         .close-panel:hover {
@@ -261,7 +204,10 @@
         .story-form {
             display: flex;
             flex-direction: column;
-            gap: 20px; /* 减小间隙 */
+            gap: 20px;
+            flex: 1;
+            overflow-y: auto;
+            padding-bottom: 20px;
         }
 
         .form-group {
@@ -271,7 +217,7 @@
         }
 
         .form-label {
-            font-size: 1.1rem; /* 减小标签字体大小 */
+            font-size: 1.1rem;
             color: #a0b0c0;
         }
 
@@ -284,6 +230,7 @@
             font-family: 'Noto Serif SC', serif;
             font-size: 1rem;
             transition: all 0.3s;
+            width: 100%;
         }
 
         .form-input:focus, .form-textarea:focus {
@@ -293,14 +240,15 @@
         }
 
         .form-textarea {
-            min-height: 150px; /* 保持高度 */
+            min-height: 150px;
             resize: vertical;
+            flex: 1;
         }
 
         .upload-area {
             border: 2px dashed rgba(100, 150, 200, 0.3);
             border-radius: 8px;
-            padding: 20px; /* 减小内边距 */
+            padding: 20px;
             text-align: center;
             cursor: pointer;
             transition: all 0.3s;
@@ -312,14 +260,14 @@
         }
 
         .upload-icon {
-            font-size: 2rem; /* 减小图标大小 */
+            font-size: 2rem;
             color: #5d8aa8;
-            margin-bottom: 10px; /* 减小下边距 */
+            margin-bottom: 10px;
         }
 
         .upload-text {
             color: #a0b0c0;
-            margin-bottom: 10px; /* 减小下边距 */
+            margin-bottom: 10px;
         }
 
         .upload-btn {
@@ -337,14 +285,14 @@
         }
 
         .preview-container {
-            margin-top: 15px; /* 减小上边距 */
+            margin-top: 15px;
             display: none;
         }
 
         .preview-title {
-            font-size: 1.1rem; /* 减小字体大小 */
+            font-size: 1.1rem;
             color: #a0b0c0;
-            margin-bottom: 8px; /* 减小下边距 */
+            margin-bottom: 8px;
         }
 
         .image-preview {
@@ -363,7 +311,7 @@
             font-size: 1.2rem;
             cursor: pointer;
             transition: all 0.3s;
-            margin-top: 15px; /* 减小上边距 */
+            margin-top: 15px;
         }
 
         .submit-btn:hover {
@@ -376,14 +324,17 @@
         .stories-list {
             display: none;
             flex-direction: column;
-            gap: 15px; /* 减小间隙 */
-            margin-top: 15px; /* 减小上边距 */
+            gap: 15px;
+            margin-top: 15px;
+            flex: 1;
+            overflow-y: auto;
+            padding-bottom: 20px;
         }
 
         .story-item {
             background: rgba(10, 25, 41, 0.6);
             border-radius: 8px;
-            padding: 15px; /* 减小内边距 */
+            padding: 15px;
             border: 1px solid rgba(100, 150, 200, 0.2);
             cursor: pointer;
             transition: all 0.3s;
@@ -397,21 +348,21 @@
         }
 
         .story-title {
-            font-size: 1.3rem; /* 减小字体大小 */
+            font-size: 1.3rem;
             color: #c0d0e0;
-            margin-bottom: 8px; /* 减小下边距 */
+            margin-bottom: 8px;
             display: flex;
             justify-content: space-between;
         }
 
         .story-date {
-            font-size: 0.9rem; /* 减小字体大小 */
+            font-size: 0.9rem;
             color: #8a9ba8;
         }
 
         .story-preview {
             color: #a0b0c0;
-            font-size: 1rem; /* 减小字体大小 */
+            font-size: 1rem;
             line-height: 1.5;
             display: -webkit-box;
             -webkit-line-clamp: 2;
@@ -424,43 +375,47 @@
         .story-detail-container {
             display: none;
             flex-direction: column;
-            gap: 15px; /* 减小间隙 */
-            margin-top: 15px; /* 减小上边距 */
+            gap: 15px;
+            margin-top: 15px;
             animation: fadeIn 0.5s ease;
+            flex: 1;
+            overflow-y: auto;
+            padding-bottom: 20px;
         }
 
         .story-detail-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 10px; /* 减小下边距 */
+            margin-bottom: 10px;
         }
 
         .story-detail-title {
-            font-size: 1.8rem; /* 减小字体大小 */
+            font-size: 1.8rem;
             color: #c0d0e0;
         }
 
         .story-detail-date {
-            font-size: 1rem; /* 减小字体大小 */
+            font-size: 1rem;
             color: #8a9ba8;
         }
 
         .story-detail-content {
-            font-size: 1.1rem; /* 减小字体大小 */
+            font-size: 1.1rem;
             line-height: 1.7;
             color: #d0e0f0;
-            margin-bottom: 15px; /* 减小下边距 */
+            margin-bottom: 15px;
             white-space: pre-wrap;
             background: rgba(10, 25, 41, 0.3);
-            padding: 15px; /* 减小内边距 */
+            padding: 15px;
             border-radius: 8px;
             border-left: 3px solid #5d8aa8;
+            flex: 1;
         }
 
         .story-detail-image {
             max-width: 100%;
-            max-height: 250px; /* 减小高度 */
+            max-height: 250px;
             border-radius: 8px;
             margin-top: 10px;
             display: block;
@@ -470,12 +425,12 @@
             background: linear-gradient(to right, #4a6572, #344955);
             color: #e0e0e0;
             border: none;
-            padding: 10px 15px; /* 减小内边距 */
+            padding: 10px 15px;
             border-radius: 5px;
             cursor: pointer;
             transition: all 0.3s;
-            margin-top: 15px; /* 减小上边距 */
-            font-size: 1rem; /* 减小字体大小 */
+            margin-top: 15px;
+            font-size: 1rem;
             align-self: flex-start;
         }
 
@@ -485,9 +440,14 @@
 
         .no-stories {
             text-align: center;
-            padding: 30px; /* 减小内边距 */
+            padding: 30px;
             color: #8a9ba8;
-            font-size: 1.2rem; /* 减小字体大小 */
+            font-size: 1.2rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
         }
 
         /* 孤树剪影 - 移动端优化 */
@@ -496,8 +456,8 @@
             bottom: 0;
             left: 50%;
             transform: translateX(-50%);
-            width: 150px; /* 减小宽度 */
-            height: 225px; /* 减小高度 */
+            width: 150px;
+            height: 225px;
             background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 300"><path d="M100 0 Q150 100 130 150 Q180 200 120 220 Q150 250 100 300 Q50 250 80 220 Q20 200 70 150 Q50 100 100 0" fill="black" opacity="0.3"/></svg>') no-repeat bottom;
             z-index: 5;
         }
@@ -505,17 +465,17 @@
         /* 删除按钮样式 - 移动端优化 */
         .delete-story-btn {
             position: absolute;
-            top: 10px; /* 调整位置 */
-            right: 10px; /* 调整位置 */
+            top: 10px;
+            right: 10px;
             background: rgba(180, 50, 50, 0.2);
             border: none;
             border-radius: 4px;
             color: #ff9b9b;
             cursor: pointer;
-            padding: 6px 10px; /* 增大内边距 */
+            padding: 6px 10px;
             transition: all 0.3s;
             z-index: 10;
-            font-size: 1rem; /* 增大字体大小 */
+            font-size: 1rem;
         }
 
         .delete-story-btn:hover {
@@ -529,7 +489,7 @@
             top: 0;
             left: 0;
             width: 100%;
-            height: 100%;
+            height: 100dvh;
             background: rgba(10, 20, 30, 0.8);
             display: flex;
             align-items: center;
@@ -549,9 +509,9 @@
         .delete-confirm-content {
             background: linear-gradient(135deg, #1a2e42, #0e1e2f);
             border-radius: 12px;
-            padding: 25px; /* 调整内边距 */
-            width: 90%; /* 相对宽度 */
-            max-width: 400px; /* 最大宽度 */
+            padding: 25px;
+            width: 90%;
+            max-width: 400px;
             text-align: center;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
             border: 1px solid rgba(180, 80, 80, 0.3);
@@ -564,32 +524,32 @@
         }
 
         .delete-confirm-title {
-            font-size: 1.8rem; /* 减小字体大小 */
+            font-size: 1.8rem;
             color: #ff9b9b;
-            margin-bottom: 15px; /* 减小下边距 */
+            margin-bottom: 15px;
         }
 
         .delete-confirm-text {
-            font-size: 1.1rem; /* 减小字体大小 */
+            font-size: 1.1rem;
             color: #c0d0e0;
-            margin-bottom: 25px; /* 减小下边距 */
-            line-height: 1.5; /* 调整行高 */
+            margin-bottom: 25px;
+            line-height: 1.5;
         }
 
         .delete-confirm-buttons {
             display: flex;
-            gap: 15px; /* 减小间隙 */
+            gap: 15px;
             justify-content: center;
         }
 
         .confirm-delete-btn, .cancel-delete-btn {
-            padding: 12px 25px; /* 增大内边距 */
+            padding: 12px 25px;
             border: none;
             border-radius: 6px;
             cursor: pointer;
-            font-size: 1.1rem; /* 增大字体大小 */
+            font-size: 1.1rem;
             transition: all 0.3s;
-            min-width: 120px; /* 最小宽度 */
+            min-width: 120px;
         }
 
         .confirm-delete-btn {
@@ -624,7 +584,6 @@
             align-items: center;
             padding: 10px 0;
             z-index: 90;
-            display: none;
             border-top: 1px solid rgba(100, 150, 200, 0.2);
             backdrop-filter: blur(10px);
         }
@@ -661,7 +620,7 @@
             background: rgba(20, 42, 74, 0.95);
             padding: 15px;
             z-index: 90;
-            display: none;
+            display: flex;
             justify-content: space-between;
             align-items: center;
             border-bottom: 1px solid rgba(100, 150, 200, 0.2);
@@ -720,18 +679,6 @@
             .date-display {
                 font-size: 1.1rem;
             }
-            .record-btn {
-                width: 65px;
-                height: 65px;
-                bottom: 15px;
-                left: 15px;
-            }
-            .view-stories-btn {
-                width: 55px;
-                height: 55px;
-                bottom: 90px;
-                left: 15px;
-            }
             .story-detail-title {
                 font-size: 1.6rem;
             }
@@ -761,20 +708,6 @@
                 padding: 15px;
                 width: 95%;
             }
-            .record-btn, .view-stories-btn {
-                width: 60px;
-                height: 60px;
-            }
-            .record-btn {
-                bottom: 80px;
-                left: auto;
-                right: 20px;
-            }
-            .view-stories-btn {
-                bottom: 20px;
-                left: auto;
-                right: 20px;
-            }
             .panel-title {
                 font-size: 1.5rem;
             }
@@ -803,9 +736,17 @@
                 display: flex;
             }
             
-            /* 隐藏桌面端按钮 */
-            .record-btn, .view-stories-btn {
-                display: none;
+            /* 调整主内容区在移动端的间距 */
+            .hero {
+                padding-top: 60px;
+                padding-bottom: 70px;
+                justify-content: flex-start;
+            }
+            
+            /* 故事面板全屏优化 */
+            .story-panel {
+                padding-top: 60px;
+                padding-bottom: 70px;
             }
         }
 
@@ -832,6 +773,25 @@
             }
             .nav-btn i {
                 font-size: 1.3rem;
+            }
+            .mobile-header {
+                padding: 10px 15px;
+            }
+            .mobile-title {
+                font-size: 1.3rem;
+            }
+        }
+        
+        /* 安全区域适配 */
+        @supports(padding: max(0px)) {
+            .mobile-nav {
+                padding-bottom: max(10px, env(safe-area-inset-bottom));
+            }
+            .story-panel, .hero {
+                padding-bottom: max(20px, env(safe-area-inset-bottom));
+            }
+            .mobile-header {
+                padding-top: max(15px, env(safe-area-inset-top));
             }
         }
     </style>
@@ -866,16 +826,28 @@
             <div class="time-display" id="currentTime">00:00:00</div>
             <div class="date-display" id="currentDate">2023年1月1日 星期一</div>
         </div>
-    </div>
-
-    <!-- 记录故事按钮 -->
-    <div class="record-btn" id="recordBtn">
-        <i class="fas fa-book"></i>
-    </div>
-    
-    <!-- 查看故事按钮 -->
-    <div class="view-stories-btn" id="viewStoriesBtn">
-        <i class="fas fa-history"></i>
+        
+        <!-- 移动端故事卡片 -->
+        <div class="story-cards">
+            <div class="story-card">
+                <div class="card-icon">
+                    <i class="fas fa-book-open"></i>
+                </div>
+                <div class="card-content">
+                    <h3>雨夜沉思</h3>
+                    <p>昨夜的雨声伴我入眠，思绪如雨丝般绵长...</p>
+                </div>
+            </div>
+            <div class="story-card">
+                <div class="card-icon">
+                    <i class="fas fa-umbrella"></i>
+                </div>
+                <div class="card-content">
+                    <h3>雨中邂逅</h3>
+                    <p>那把红色的雨伞，成为阴雨天最亮丽的风景...</p>
+                </div>
+            </div>
+        </div>
     </div>
     
     <!-- 故事记录面板 -->
@@ -964,7 +936,7 @@
         // 创建雨滴
         function createRain() {
             const rainContainer = document.getElementById('rainContainer');
-            const rainCount = 100; // 减少雨滴数量提高性能
+            const rainCount = 100;
             
             for (let i = 0; i < rainCount; i++) {
                 const drop = document.createElement('div');
@@ -1080,10 +1052,7 @@
                 loadStories();
             }
             
-            recordBtn.addEventListener('click', openRecordPanel);
             mobileRecordBtn.addEventListener('click', openRecordPanel);
-            
-            viewStoriesBtn.addEventListener('click', openStoriesPanel);
             mobileStoriesBtn.addEventListener('click', openStoriesPanel);
             
             // 关闭故事面板
@@ -1177,7 +1146,7 @@
             // 保存故事到本地存储
             function saveStory(story) {
                 let stories = JSON.parse(localStorage.getItem('rainStories')) || [];
-                stories.unshift(story); // 新故事添加到开头
+                stories.unshift(story);
                 localStorage.setItem('rainStories', JSON.stringify(stories));
             }
             
@@ -1230,7 +1199,7 @@
                     // 为删除按钮添加事件
                     const deleteBtn = storyElement.querySelector('.delete-story-btn');
                     deleteBtn.addEventListener('click', function(e) {
-                        e.stopPropagation(); // 阻止冒泡，避免触发故事项点击事件
+                        e.stopPropagation();
                         storyToDelete = story.id;
                         deleteConfirmModal.classList.add('active');
                     });
@@ -1329,15 +1298,15 @@
                 messageElement.style.transform = 'translateX(-50%)';
                 messageElement.style.backgroundColor = 'rgba(20, 42, 74, 0.9)';
                 messageElement.style.color = '#c0d0e0';
-                messageElement.style.padding = '12px 25px'; /* 减小内边距 */
+                messageElement.style.padding = '12px 25px';
                 messageElement.style.borderRadius = '8px';
                 messageElement.style.boxShadow = '0 5px 15px rgba(0,0,0,0.3)';
                 messageElement.style.zIndex = '2000';
                 messageElement.style.border = '1px solid rgba(100, 150, 200, 0.3)';
                 messageElement.style.opacity = '0';
                 messageElement.style.transition = 'opacity 0.5s ease';
-                messageElement.style.fontSize = '0.95rem'; /* 减小字体大小 */
-                messageElement.style.maxWidth = '90%'; /* 增加最大宽度限制 */
+                messageElement.style.fontSize = '0.95rem';
+                messageElement.style.maxWidth = '90%';
                 messageElement.style.textAlign = 'center';
                 
                 document.body.appendChild(messageElement);
@@ -1366,10 +1335,13 @@
                 const touchX = e.touches[0].clientX;
                 const diff = touchX - touchStartX;
                 
-                if (diff > 50) { // 向右滑动超过50px
+                if (diff > 50) {
                     storyPanel.classList.remove('active');
                 }
             });
+            
+            // 初始加载示例故事
+            loadStories();
         };
     </script>
 </body>
