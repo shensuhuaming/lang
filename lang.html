@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>朗少帅在此 - 凡人勿扰</title>
-    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+    <title>孤雨之境</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
@@ -15,15 +15,69 @@
 
         body {
             min-height: 100vh;
-            background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
-            font-family: 'Pacifico', cursive;
+            background: linear-gradient(135deg, #0a1929, #1a3658, #0c2136);
+            font-family: 'Noto Serif SC', serif;
             overflow-x: hidden;
-            transition: background 1.5s ease;
+            color: #e0e0e0;
             position: relative;
+            perspective: 1000px;
         }
 
+        /* 雨滴效果 */
+        .rain-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+            overflow: hidden;
+        }
+
+        .rain-drop {
+            position: absolute;
+            top: -50px;
+            width: 1px;
+            height: 30px;
+            background: linear-gradient(to bottom, rgba(255,255,255,0.3), rgba(255,255,255,0.1));
+            animation: rain-fall 1.5s linear infinite;
+        }
+
+        /* 雾气效果 */
+        .fog-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        .fog {
+            position: absolute;
+            bottom: 0;
+            width: 200%;
+            height: 300px;
+            background: linear-gradient(to top, rgba(10, 25, 41, 0.9) 0%, transparent 100%);
+            animation: fog-move 30s linear infinite;
+        }
+
+        .fog-1 {
+            opacity: 0.4;
+            animation-duration: 35s;
+        }
+
+        .fog-2 {
+            opacity: 0.6;
+            animation-duration: 25s;
+            animation-direction: reverse;
+        }
+
+        /* 主内容区域 */
         .hero {
-            height: 80vh;
+            height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -31,109 +85,100 @@
             position: relative;
             padding: 20px;
             text-align: center;
+            z-index: 10;
         }
 
         .title {
-            color: #fff;
-            font-size: 4rem;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
-            animation: pulse 2s infinite;
-            margin-bottom: 20px;
-            line-height: 1.3;
-        }
-
-        .celebration {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 999;
-        }
-
-        .confetti {
-            width: 10px;
-            height: 10px;
-            position: absolute;
-            animation: confetti-fall 3s linear forwards;
-            transform: translateZ(0);
-            will-change: transform, opacity;
-        }
-
-        .firework {
-            width: 50px;
-            height: 50px;
-            position: absolute;
-            animation: explode 1s ease-out forwards;
-            transform: translateZ(0);
-            will-change: transform, opacity;
-        }
-
-        /* 底部文字样式 */
-        .countdown-end {
-            position: fixed;
-            bottom: 50px;
-            left: 0;
-            width: 100%;
-            text-align: center;
+            color: #f0f0f0;
             font-size: 4.5rem;
-            color: #fff;
-            text-shadow: 0 0 15px #ff0000, 0 0 30px #ff9900;
-            font-weight: bold;
-            letter-spacing: 3px;
+            text-shadow: 0 0 15px rgba(100, 150, 255, 0.3);
+            margin-bottom: 30px;
+            line-height: 1.3;
+            letter-spacing: 2px;
+            font-weight: 700;
+            position: relative;
+            animation: title-glow 4s infinite alternate;
+        }
+
+        .subtitle {
+            font-size: 1.5rem;
+            color: #a0b0c0;
+            max-width: 600px;
+            line-height: 1.8;
+            margin-bottom: 50px;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+        }
+
+        /* 倒计时样式 */
+        .countdown {
+            position: fixed;
+            top: 30px;
+            left: 30px;
+            background: rgba(10, 25, 41, 0.7);
+            padding: 15px 25px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
             z-index: 100;
-            animation: glow 2s infinite alternate, float 3s ease-in-out infinite;
-            padding: 20px 0;
-            background: rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            font-size: 1.2rem;
+            border: 1px solid rgba(100, 150, 200, 0.2);
             backdrop-filter: blur(5px);
-            border-top: 3px solid rgba(255, 0, 0, 0.5);
-            border-bottom: 3px solid rgba(255, 0, 0, 0.5);
         }
 
-        .balloons {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
+        .countdown i {
+            margin-right: 12px;
+            color: #5d8aa8;
+            font-size: 1.8rem;
         }
 
-        .balloon {
-            width: 50px;
-            height: 60px;
-            border-radius: 50%;
-            position: absolute;
-            bottom: -100px;
-            animation: float 8s infinite;
-            opacity: 0.8;
-            background: linear-gradient(45deg, #ff3366, #ff8e8e);
-            box-shadow: 2px 2px 6px rgba(0,0,0,0.2);
-            transform: translateZ(0);
+        .countdown span {
+            font-size: 1.8rem;
+            color: #c0d0e0;
+            margin: 0 8px;
+            font-weight: bold;
+            text-shadow: 0 0 10px rgba(100, 150, 255, 0.3);
         }
 
+        /* 礼物盒样式 */
         .gift-box {
             width: 120px;
             height: 120px;
-            background: #ffd700;
+            background: linear-gradient(135deg, #1e3c5f, #142a4a);
             position: fixed;
-            bottom: 20px;
-            right: 20px;
+            bottom: 30px;
+            right: 30px;
             cursor: pointer;
             transition: transform 0.5s;
-            border-radius: 10px;
-            box-shadow: 4px 4px 10px rgba(0,0,0,0.2);
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
             z-index: 100;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
+            border: 1px solid rgba(100, 150, 200, 0.2);
+            overflow: hidden;
+        }
+
+        .gift-box::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, 
+                transparent 0%, 
+                rgba(100, 150, 255, 0.1) 50%, 
+                transparent 100%);
+            animation: gift-glow 3s infinite;
         }
 
         .ribbon {
             width: 100%;
             height: 20px;
-            background: #ff3366;
+            background: linear-gradient(to right, #4a6572, #344955);
             position: relative;
+            z-index: 2;
         }
 
         .ribbon::before, .ribbon::after {
@@ -141,9 +186,10 @@
             position: absolute;
             width: 20px;
             height: 20px;
-            background: #ff3366;
+            background: #4a6572;
             border-radius: 50%;
             top: -10px;
+            z-index: 1;
         }
 
         .ribbon::before {
@@ -154,30 +200,24 @@
             right: 30px;
         }
 
-        .countdown {
+        .gift-icon {
+            font-size: 2.8rem;
+            color: #5d8aa8;
+            margin-top: 15px;
+            z-index: 2;
+            text-shadow: 0 0 10px rgba(100, 150, 255, 0.3);
+        }
+
+        /* 孤树剪影 */
+        .lone-tree {
             position: fixed;
-            top: 20px;
-            left: 20px;
-            background: rgba(255,255,255,0.9);
-            padding: 15px;
-            border-radius: 10px;
-            box-shadow: 2px 2px 8px rgba(0,0,0,0.1);
-            z-index: 100;
-            display: flex;
-            align-items: center;
-            font-size: 1.2rem;
-        }
-
-        .countdown i {
-            margin-right: 10px;
-            color: #ff6b6b;
-        }
-
-        .countdown span {
-            font-size: 1.5rem;
-            color: #ff6b6b;
-            margin: 0 5px;
-            font-weight: bold;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 300px;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 300"><path d="M100 0 Q150 100 130 150 Q180 200 120 220 Q150 250 100 300 Q50 250 80 220 Q20 200 70 150 Q50 100 100 0" fill="black" opacity="0.3"/></svg>') no-repeat bottom;
+            z-index: 5;
         }
 
         /* 模态框样式 */
@@ -188,81 +228,133 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.7);
+            background: rgba(0, 0, 0, 0.85);
             z-index: 1000;
             justify-content: center;
             align-items: center;
-            animation: fadeIn 0.3s ease;
+            animation: fadeIn 0.5s ease;
         }
 
         .modal-content {
-            background: linear-gradient(135deg, #ffd700, #ffa500);
+            background: linear-gradient(135deg, #142a4a, #0c2136);
             width: 80%;
             max-width: 500px;
             padding: 40px;
             border-radius: 20px;
             text-align: center;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+            box-shadow: 0 0 40px rgba(50, 100, 150, 0.3);
             position: relative;
-            transform: scale(0);
-            animation: scaleIn 0.3s ease forwards 0.2s;
+            border: 1px solid rgba(100, 150, 200, 0.2);
+            transform: scale(0.9);
+            opacity: 0;
+            animation: scaleIn 0.5s ease forwards 0.3s;
+        }
+
+        .modal-content::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-radius: 20px;
+            background: linear-gradient(45deg, 
+                transparent 0%, 
+                rgba(100, 150, 255, 0.1) 50%, 
+                transparent 100%);
+            animation: gift-glow 5s infinite;
+            pointer-events: none;
         }
 
         .modal-title {
             font-size: 2.5rem;
-            color: #ff3366;
+            color: #c0d0e0;
             margin-bottom: 20px;
-            text-shadow: 0 2px 2px rgba(0,0,0,0.2);
+            text-shadow: 0 0 15px rgba(100, 150, 255, 0.3);
         }
 
         .modal-message {
-            font-size: 1.5rem;
-            color: #8B4513;
+            font-size: 1.3rem;
+            color: #a0b0c0;
             margin-bottom: 30px;
-            line-height: 1.6;
+            line-height: 1.8;
         }
 
         .close-btn {
-            background: #ff3366;
-            color: white;
+            background: linear-gradient(to right, #4a6572, #344955);
+            color: #e0e0e0;
             border: none;
-            padding: 12px 30px;
+            padding: 12px 40px;
             font-size: 1.2rem;
             border-radius: 50px;
             cursor: pointer;
             transition: all 0.3s ease;
-            font-family: 'Pacifico', cursive;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            position: relative;
+            z-index: 2;
+            border: 1px solid rgba(100, 150, 200, 0.2);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
         }
 
         .close-btn:hover {
-            background: #ff2255;
+            background: linear-gradient(to right, #5a7582, #445965);
             transform: translateY(-3px);
-            box-shadow: 0 6px 15px rgba(0,0,0,0.3);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
         }
 
-        /* 响应式优化 */
+        /* 动画效果 */
+        @keyframes rain-fall {
+            0% { transform: translateY(0) translateX(0); opacity: 1; }
+            100% { transform: translateY(100vh) translateX(20px); opacity: 0.2; }
+        }
+
+        @keyframes fog-move {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        @keyframes title-glow {
+            0% { text-shadow: 0 0 15px rgba(100, 150, 255, 0.3); }
+            100% { text-shadow: 0 0 25px rgba(100, 150, 255, 0.6), 0 0 40px rgba(80, 120, 200, 0.3); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes scaleIn {
+            from { transform: scale(0.9); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        @keyframes gift-glow {
+            0% { opacity: 0.1; }
+            50% { opacity: 0.3; }
+            100% { opacity: 0.1; }
+        }
+
+        /* 响应式设计 */
         @media (max-width: 768px) {
             .title {
-                font-size: 2.5rem;
+                font-size: 3rem;
             }
             .countdown {
-                top: 10px;
-                left: 10px;
-                padding: 10px;
+                top: 20px;
+                left: 20px;
+                padding: 12px 20px;
                 font-size: 1rem;
             }
             .countdown span {
-                font-size: 1.2rem;
+                font-size: 1.5rem;
             }
             .gift-box {
-                width: 80px;
-                height: 80px;
+                width: 90px;
+                height: 90px;
+                bottom: 20px;
+                right: 20px;
             }
-            .countdown-end {
-                font-size: 2.5rem;
-                bottom: 40px;
-                padding: 15px 0;
+            .gift-icon {
+                font-size: 2rem;
             }
             .modal-content {
                 padding: 30px 20px;
@@ -271,241 +363,160 @@
                 font-size: 2rem;
             }
             .modal-message {
-                font-size: 1.2rem;
+                font-size: 1.1rem;
             }
         }
         
         @media (max-width: 480px) {
             .title {
-                font-size: 2rem;
+                font-size: 2.2rem;
             }
-            .countdown-end {
-                font-size: 2rem;
-                bottom: 30px;
+            .subtitle {
+                font-size: 1.2rem;
+                padding: 0 20px;
+            }
+            .countdown {
+                top: 15px;
+                left: 15px;
+                padding: 10px 15px;
+            }
+            .countdown span {
+                font-size: 1.3rem;
             }
             .gift-box {
                 width: 70px;
                 height: 70px;
-                bottom: 10px;
-                right: 10px;
+                bottom: 15px;
+                right: 15px;
             }
-        }
-
-        /* 动画效果 */
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-            100% { transform: scale(1); }
-        }
-
-        @keyframes float {
-            0% { transform: translateX(0); }
-            50% { transform: translateX(30px); }
-            100% { bottom: 100vh; opacity: 0; transform: translateX(-30px); }
-        }
-
-        @keyframes confetti-fall {
-            0% { transform: translateY(-100vh) rotate(0deg); opacity: 1; }
-            100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
-        }
-
-        @keyframes explode {
-            0% { transform: scale(0); opacity: 1; }
-            100% { transform: scale(5); opacity: 0; }
-        }
-
-        @keyframes glow {
-            0% { text-shadow: 0 0 10px #ff0000, 0 0 20px #ff9900; }
-            100% { text-shadow: 0 0 20px #ff0000, 0 0 40px #ff9900, 0 0 60px #ff5500; }
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        
-        @keyframes scaleIn {
-            from { transform: scale(0); }
-            to { transform: scale(1); }
-        }
-        
-        @keyframes float-text {
-            0% { transform: translateY(0); }
-            50% { transform: translateY(-15px); }
-            100% { transform: translateY(0); }
-        }
-        
-        @keyframes bounce {
-            0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
-            40% {transform: translateY(-30px);}
-            60% {transform: translateY(-15px);}
+            .gift-icon {
+                font-size: 1.5rem;
+                margin-top: 10px;
+            }
         }
     </style>
 </head>
 <body>
+    <!-- 雨滴效果 -->
+    <div class="rain-container" id="rainContainer"></div>
+    
+    <!-- 雾气效果 -->
+    <div class="fog-container">
+        <div class="fog fog-1"></div>
+        <div class="fog fog-2"></div>
+    </div>
+    
+    <!-- 孤树剪影 -->
+    <div class="lone-tree"></div>
+
+    <!-- 主内容区 -->
     <div class="hero">
-        <h1 class="title">朗少帅在此!<br>凡人勿扰</h1>
-        <div class="balloons"></div>
+        <h1 class="title">孤雨之境</h1>
+        <p class="subtitle">在这片永恒的雨幕中，时间仿佛凝固，只有雨滴敲打寂静的声音，陪伴着孤独的旅人...</p>
     </div>
 
+    <!-- 礼物盒 -->
     <div class="gift-box" onclick="openGift()">
         <div class="ribbon"></div>
-        <i class="fas fa-gift" style="font-size: 2.5rem; color: #ff3366; margin-top: 10px;"></i>
+        <i class="fas fa-mountain gift-icon"></i>
     </div>
 
+    <!-- 倒计时 -->
     <div class="countdown">
-        <i class="fas fa-clock"></i>
-        <span id="days">00</span>天
-        <span id="hours">00</span>时
+        <i class="fas fa-hourglass-half"></i>
+        <span id="days">07</span>天
+        <span id="hours">18</span>时
     </div>
-    <div class="celebration"></div>
     
     <!-- 模态框 -->
     <div id="giftModal" class="modal">
         <div class="modal-content">
-            <h2 class="modal-title">惊喜礼物</h2>
-            <p class="modal-message">小丑，还是打开了吗!<br>你以为会有什么好东西？<br>朗少帅在此，凡人退散！</p>
-            <button class="close-btn" onclick="closeModal()">关闭</button>
+            <h2 class="modal-title">孤独者的赠礼</h2>
+            <p class="modal-message">在这永恒的雨中，你找到了什么？<br>或许孤独本身，就是最珍贵的礼物。<br>继续前行吧，旅人，雨幕之后自有光明...</p>
+            <button class="close-btn" onclick="closeModal()">继续旅程</button>
         </div>
     </div>
 
+    <!-- 雨声音频 -->
+    <audio id="rainSound" loop>
+        <source src="https://assets.mixkit.co/sfx/preview/mixkit-rain-loop-1243.mp3" type="audio/mpeg">
+    </audio>
+
     <script>
-        let hasTriggered = false;
-        let countdownInterval;
-        const audio = new Audio('https://actions.google.com/sounds/v1/celebrations/party_horn.ogg');
-        audio.preload = 'auto';
-        document.hasUserInteracted = false;
-
-        window.onload = function() {
-            createBalloons();
-            updateCountdown();
-            countdownInterval = setInterval(updateCountdown, 1000);
+        // 创建雨滴
+        function createRain() {
+            const rainContainer = document.getElementById('rainContainer');
+            const rainCount = 150;
             
-            document.body.addEventListener('click', () => {
-                document.hasUserInteracted = true;
-            }, { once: true });
-        };
-
-        function createBalloons() {
-            const container = document.querySelector('.balloons');
-            const colors = ['#ff3366', '#4CAF50', '#2196F3', '#ffd700', '#9C27B0', '#FF9800'];
-            
-            for(let i = 0; i < 30; i++) {
-                const balloon = document.createElement('div');
-                balloon.className = 'balloon';
-                balloon.style.left = Math.random() * 100 + '%';
-                balloon.style.animationDelay = Math.random() * 5 + 's';
-                balloon.style.animationDuration = (5 + Math.random() * 5) + 's';
-                balloon.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-                container.appendChild(balloon);
+            for (let i = 0; i < rainCount; i++) {
+                const drop = document.createElement('div');
+                drop.className = 'rain-drop';
+                drop.style.left = Math.random() * 100 + 'vw';
+                drop.style.animationDelay = Math.random() * 5 + 's';
+                drop.style.animationDuration = (0.5 + Math.random() * 1) + 's';
+                drop.style.opacity = 0.1 + Math.random() * 0.4;
+                drop.style.height = 20 + Math.random() * 30 + 'px';
+                rainContainer.appendChild(drop);
             }
         }
-
-        function updateCountdown() {
-            // 设置目标时间为2025年5月28日
-            const targetDate = new Date('2025-05-28T00:00:00+08:00');
-            const now = new Date();
-            let diff = targetDate - now;
-
-            // 如果时间已过并且尚未触发
-            if (diff < 0 && !hasTriggered) {
-                hasTriggered = true;
-                handleCountdownEnd();
-                document.getElementById('days').textContent = "00";
-                document.getElementById('hours').textContent = "00";
-                return;
-            }
-
-            const days = Math.floor(diff / (1000*60*60*24));
-            const hours = Math.floor((diff % (1000*60*60*24))/(1000*60*60));
-
-            document.getElementById('days').textContent = days.toString().padStart(2,'0');
-            document.getElementById('hours').textContent = hours.toString().padStart(2,'0');
-        }
-
-        function handleCountdownEnd() {
-            clearInterval(countdownInterval);
+        
+        // 播放雨声
+        function playRainSound() {
+            const rainSound = document.getElementById('rainSound');
+            rainSound.volume = 0.3;
             
-            const endText = document.createElement('div');
-            endText.className = 'countdown-end';
-            endText.textContent = '犯人勿扰';
-            document.body.appendChild(endText);
-
-            createConfetti(100);
-            createFireworks(8);
-            document.body.style.background = 'linear-gradient(45deg, #ff0000, #ffd700)';
-            playCelebrationMusic();
-        }
-
-        function createConfetti(amount) {
-            const container = document.querySelector('.celebration');
-            for (let i = 0; i < amount; i++) {
-                const confetti = document.createElement('div');
-                confetti.className = 'confetti';
-                confetti.style.left = Math.random() * 100 + '%';
-                confetti.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 50%)`;
-                confetti.style.animation = `confetti-fall ${2 + Math.random() * 2}s linear forwards`;
-                confetti.style.width = `${5 + Math.random() * 10}px`;
-                confetti.style.height = `${5 + Math.random() * 10}px`;
-                
-                confetti.addEventListener('animationend', () => {
-                    confetti.remove();
+            // 尝试播放音频
+            const playPromise = rainSound.play();
+            
+            if (playPromise !== undefined) {
+                playPromise.catch(() => {
+                    // 自动播放失败，等待用户交互
+                    document.addEventListener('click', () => {
+                        rainSound.play();
+                    }, { once: true });
                 });
-                container.appendChild(confetti);
             }
         }
-
-        function createFireworks(amount) {
-            const container = document.querySelector('.celebration');
-            for (let i = 0; i < amount; i++) {
-                setTimeout(() => {
-                    const firework = document.createElement('div');
-                    firework.className = 'firework';
-                    firework.style.left = Math.random() * 100 + '%';
-                    firework.style.top = Math.random() * 100 + '%';
-                    firework.style.background = `radial-gradient(circle, 
-                        hsl(${Math.random() * 360}, 100%, 50%) 20%, 
-                        rgba(255,255,255,0.5) 100%)`;
-                    firework.style.animation = `explode 1.5s ease-out forwards`;
-                    
-                    firework.addEventListener('animationend', () => {
-                        firework.remove();
-                    });
-                    container.appendChild(firework);
-                }, i * 800);
-            }
-        }
-
-        function playCelebrationMusic() {
-            if (document.hasUserInteracted) {
-                audio.volume = 0.5;
-                audio.play();
-            } else {
-                document.addEventListener('click', () => {
-                    audio.volume = 0.5;
-                    audio.play();
-                    document.hasUserInteracted = true;
-                }, { once: true });
-            }
-        }
-
-        // 打开礼物函数 - 显示模态框
+        
+        // 打开礼物模态框
         function openGift() {
             const modal = document.getElementById('giftModal');
             modal.style.display = 'flex';
             
             // 添加动画效果
-            document.querySelector('.gift-box').style.animation = 'bounce 1s';
+            document.querySelector('.gift-box').style.transform = 'rotate(15deg) scale(0.95)';
             setTimeout(() => {
-                document.querySelector('.gift-box').style.animation = '';
-            }, 1000);
+                document.querySelector('.gift-box').style.transform = 'rotate(0) scale(1)';
+            }, 300);
         }
-
+        
         // 关闭模态框
         function closeModal() {
             const modal = document.getElementById('giftModal');
             modal.style.display = 'none';
         }
+        
+        // 初始化页面
+        window.onload = function() {
+            createRain();
+            playRainSound();
+            
+            // 初始化倒计时
+            function updateCountdown() {
+                const targetDate = new Date('2024-12-31T00:00:00+08:00');
+                const now = new Date();
+                const diff = targetDate - now;
+                
+                const days = Math.floor(diff / (1000*60*60*24));
+                const hours = Math.floor((diff % (1000*60*60*24))/(1000*60*60));
+                
+                document.getElementById('days').textContent = days.toString().padStart(2,'0');
+                document.getElementById('hours').textContent = hours.toString().padStart(2,'0');
+            }
+            
+            updateCountdown();
+            setInterval(updateCountdown, 1000*60); // 每分钟更新一次
+        };
     </script>
 </body>
 </html>
