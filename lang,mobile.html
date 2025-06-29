@@ -79,25 +79,23 @@
             animation-direction: reverse;
         }
 
-        /* 主内容区域 - 移动端优化 */
+        /* 主内容区域 - 优化布局 */
         .hero {
             flex: 1;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
-            position: relative;
             padding: 15px;
             text-align: center;
             z-index: 10;
-            min-height: 100dvh;
+            overflow-y: auto;
         }
 
         .title {
             color: #f0f0f0;
-            font-size: 2.8rem;
+            font-size: 2.5rem;
             text-shadow: 0 0 15px rgba(100, 150, 255, 0.3);
-            margin-bottom: 20px;
+            margin: 20px 0;
             line-height: 1.3;
             letter-spacing: 1px;
             font-weight: 700;
@@ -107,11 +105,11 @@
         }
 
         .subtitle {
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             color: #a0b0c0;
             max-width: 90%;
             line-height: 1.6;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
             text-shadow: 0 1px 3px rgba(0,0,0,0.5);
             padding: 0 15px;
         }
@@ -119,35 +117,106 @@
         /* 时间显示样式 */
         .time-container {
             background: rgba(10, 25, 41, 0.7);
-            padding: 20px 30px;
+            padding: 15px 20px;
             border-radius: 15px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
             border: 1px solid rgba(100, 150, 200, 0.2);
             backdrop-filter: blur(8px);
-            margin-top: 20px;
+            margin: 10px 0 20px;
             text-align: center;
             width: 90%;
             max-width: 500px;
         }
 
         .time-display {
-            font-size: 3rem;
+            font-size: 2.5rem;
             font-weight: 300;
-            letter-spacing: 3px;
+            letter-spacing: 2px;
             color: #c0d0e0;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
             text-shadow: 0 0 20px rgba(100, 150, 255, 0.4);
             font-family: 'Courier New', monospace;
         }
 
         .date-display {
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             color: #8a9ba8;
             letter-spacing: 1px;
             text-transform: uppercase;
         }
 
-        /* 故事记录面板 - 移动端优化 */
+        /* 故事卡片容器 */
+        .stories-container {
+            width: 90%;
+            max-width: 500px;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+            margin: 15px 0;
+        }
+
+        /* 故事卡片 */
+        .story-card {
+            background: rgba(20, 42, 74, 0.6);
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid rgba(100, 150, 200, 0.3);
+            text-align: left;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .story-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            border-color: #5d8aa8;
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .card-icon {
+            width: 40px;
+            height: 40px;
+            background: rgba(100, 150, 200, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+        }
+
+        .card-icon i {
+            font-size: 1.2rem;
+            color: #8ab6d6;
+        }
+
+        .card-title {
+            font-size: 1.4rem;
+            color: #c0d0e0;
+            font-weight: 600;
+        }
+
+        .card-content {
+            color: #a0b0c0;
+            font-size: 1rem;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .card-date {
+            font-size: 0.85rem;
+            color: #8a9ba8;
+            margin-top: auto;
+            align-self: flex-end;
+        }
+
+        /* 故事记录面板 */
         .story-panel {
             position: fixed;
             top: 0;
@@ -182,7 +251,7 @@
         }
 
         .panel-title {
-            font-size: 1.8rem;
+            font-size: 1.6rem;
             color: #c0d0e0;
             text-shadow: 0 0 10px rgba(100, 150, 255, 0.3);
         }
@@ -194,7 +263,7 @@
             font-size: 1.5rem;
             cursor: pointer;
             transition: color 0.3s;
-            padding: 10px;
+            padding: 8px;
         }
 
         .close-panel:hover {
@@ -204,10 +273,10 @@
         .story-form {
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            gap: 15px;
             flex: 1;
             overflow-y: auto;
-            padding-bottom: 20px;
+            padding-bottom: 15px;
         }
 
         .form-group {
@@ -217,7 +286,7 @@
         }
 
         .form-label {
-            font-size: 1.1rem;
+            font-size: 1rem;
             color: #a0b0c0;
         }
 
@@ -240,7 +309,7 @@
         }
 
         .form-textarea {
-            min-height: 150px;
+            min-height: 120px;
             resize: vertical;
             flex: 1;
         }
@@ -248,7 +317,7 @@
         .upload-area {
             border: 2px dashed rgba(100, 150, 200, 0.3);
             border-radius: 8px;
-            padding: 20px;
+            padding: 15px;
             text-align: center;
             cursor: pointer;
             transition: all 0.3s;
@@ -260,24 +329,26 @@
         }
 
         .upload-icon {
-            font-size: 2rem;
+            font-size: 1.8rem;
             color: #5d8aa8;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
 
         .upload-text {
             color: #a0b0c0;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
+            font-size: 0.95rem;
         }
 
         .upload-btn {
             background: linear-gradient(to right, #4a6572, #344955);
             color: #e0e0e0;
             border: none;
-            padding: 8px 20px;
+            padding: 8px 16px;
             border-radius: 5px;
             cursor: pointer;
             transition: all 0.3s;
+            font-size: 0.95rem;
         }
 
         .upload-btn:hover {
@@ -285,19 +356,19 @@
         }
 
         .preview-container {
-            margin-top: 15px;
+            margin-top: 12px;
             display: none;
         }
 
         .preview-title {
-            font-size: 1.1rem;
+            font-size: 1rem;
             color: #a0b0c0;
             margin-bottom: 8px;
         }
 
         .image-preview {
             max-width: 100%;
-            max-height: 200px;
+            max-height: 180px;
             border-radius: 8px;
             display: none;
         }
@@ -306,12 +377,12 @@
             background: linear-gradient(to right, #4a6572, #344955);
             color: #e0e0e0;
             border: none;
-            padding: 15px;
+            padding: 14px;
             border-radius: 8px;
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             cursor: pointer;
             transition: all 0.3s;
-            margin-top: 15px;
+            margin-top: 10px;
         }
 
         .submit-btn:hover {
@@ -320,20 +391,20 @@
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
         }
 
-        /* 故事列表样式 - 移动端优化 */
+        /* 故事列表样式 */
         .stories-list {
             display: none;
             flex-direction: column;
-            gap: 15px;
+            gap: 12px;
             margin-top: 15px;
             flex: 1;
             overflow-y: auto;
-            padding-bottom: 20px;
+            padding-bottom: 15px;
         }
 
         .story-item {
             background: rgba(10, 25, 41, 0.6);
-            border-radius: 8px;
+            border-radius: 10px;
             padding: 15px;
             border: 1px solid rgba(100, 150, 200, 0.2);
             cursor: pointer;
@@ -348,7 +419,7 @@
         }
 
         .story-title {
-            font-size: 1.3rem;
+            font-size: 1.2rem;
             color: #c0d0e0;
             margin-bottom: 8px;
             display: flex;
@@ -356,13 +427,13 @@
         }
 
         .story-date {
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             color: #8a9ba8;
         }
 
         .story-preview {
             color: #a0b0c0;
-            font-size: 1rem;
+            font-size: 0.95rem;
             line-height: 1.5;
             display: -webkit-box;
             -webkit-line-clamp: 2;
@@ -371,7 +442,7 @@
             text-overflow: ellipsis;
         }
 
-        /* 故事详情样式 - 移动端优化 */
+        /* 故事详情样式 */
         .story-detail-container {
             display: none;
             flex-direction: column;
@@ -380,7 +451,7 @@
             animation: fadeIn 0.5s ease;
             flex: 1;
             overflow-y: auto;
-            padding-bottom: 20px;
+            padding-bottom: 15px;
         }
 
         .story-detail-header {
@@ -391,17 +462,18 @@
         }
 
         .story-detail-title {
-            font-size: 1.8rem;
+            font-size: 1.6rem;
             color: #c0d0e0;
+            font-weight: 600;
         }
 
         .story-detail-date {
-            font-size: 1rem;
+            font-size: 0.95rem;
             color: #8a9ba8;
         }
 
         .story-detail-content {
-            font-size: 1.1rem;
+            font-size: 1.05rem;
             line-height: 1.7;
             color: #d0e0f0;
             margin-bottom: 15px;
@@ -415,7 +487,7 @@
 
         .story-detail-image {
             max-width: 100%;
-            max-height: 250px;
+            max-height: 220px;
             border-radius: 8px;
             margin-top: 10px;
             display: block;
@@ -442,7 +514,7 @@
             text-align: center;
             padding: 30px;
             color: #8a9ba8;
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             flex: 1;
             display: flex;
             flex-direction: column;
@@ -450,19 +522,19 @@
             align-items: center;
         }
 
-        /* 孤树剪影 - 移动端优化 */
+        /* 孤树剪影 */
         .lone-tree {
             position: fixed;
             bottom: 0;
             left: 50%;
             transform: translateX(-50%);
-            width: 150px;
-            height: 225px;
+            width: 140px;
+            height: 210px;
             background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 300"><path d="M100 0 Q150 100 130 150 Q180 200 120 220 Q150 250 100 300 Q50 250 80 220 Q20 200 70 150 Q50 100 100 0" fill="black" opacity="0.3"/></svg>') no-repeat bottom;
             z-index: 5;
         }
 
-        /* 删除按钮样式 - 移动端优化 */
+        /* 删除按钮样式 */
         .delete-story-btn {
             position: absolute;
             top: 10px;
@@ -472,10 +544,10 @@
             border-radius: 4px;
             color: #ff9b9b;
             cursor: pointer;
-            padding: 6px 10px;
+            padding: 5px 8px;
             transition: all 0.3s;
             z-index: 10;
-            font-size: 1rem;
+            font-size: 0.9rem;
         }
 
         .delete-story-btn:hover {
@@ -483,7 +555,7 @@
             color: #ffcccc;
         }
 
-        /* 确认删除弹窗 - 移动端优化 */
+        /* 确认删除弹窗 */
         .delete-confirm-modal {
             position: fixed;
             top: 0;
@@ -509,9 +581,9 @@
         .delete-confirm-content {
             background: linear-gradient(135deg, #1a2e42, #0e1e2f);
             border-radius: 12px;
-            padding: 25px;
+            padding: 20px;
             width: 90%;
-            max-width: 400px;
+            max-width: 380px;
             text-align: center;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
             border: 1px solid rgba(180, 80, 80, 0.3);
@@ -524,32 +596,32 @@
         }
 
         .delete-confirm-title {
-            font-size: 1.8rem;
+            font-size: 1.5rem;
             color: #ff9b9b;
-            margin-bottom: 15px;
+            margin-bottom: 12px;
         }
 
         .delete-confirm-text {
-            font-size: 1.1rem;
+            font-size: 1rem;
             color: #c0d0e0;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
             line-height: 1.5;
         }
 
         .delete-confirm-buttons {
             display: flex;
-            gap: 15px;
+            gap: 12px;
             justify-content: center;
         }
 
         .confirm-delete-btn, .cancel-delete-btn {
-            padding: 12px 25px;
+            padding: 10px 20px;
             border: none;
             border-radius: 6px;
             cursor: pointer;
-            font-size: 1.1rem;
+            font-size: 1rem;
             transition: all 0.3s;
-            min-width: 120px;
+            min-width: 110px;
         }
 
         .confirm-delete-btn {
@@ -582,10 +654,11 @@
             display: flex;
             justify-content: space-around;
             align-items: center;
-            padding: 10px 0;
+            padding: 8px 0;
             z-index: 90;
             border-top: 1px solid rgba(100, 150, 200, 0.2);
             backdrop-filter: blur(10px);
+            height: 60px;
         }
         
         .nav-btn {
@@ -594,16 +667,17 @@
             align-items: center;
             justify-content: center;
             color: #c0d0e0;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             text-decoration: none;
-            padding: 8px 15px;
+            padding: 5px 10px;
             border-radius: 20px;
             transition: all 0.3s;
+            flex: 1;
         }
         
         .nav-btn i {
-            font-size: 1.5rem;
-            margin-bottom: 5px;
+            font-size: 1.3rem;
+            margin-bottom: 3px;
             color: #8ab6d6;
         }
         
@@ -618,17 +692,18 @@
             left: 0;
             width: 100%;
             background: rgba(20, 42, 74, 0.95);
-            padding: 15px;
+            padding: 12px 15px;
             z-index: 90;
             display: flex;
             justify-content: space-between;
             align-items: center;
             border-bottom: 1px solid rgba(100, 150, 200, 0.2);
             backdrop-filter: blur(10px);
+            height: 60px;
         }
         
         .mobile-title {
-            font-size: 1.5rem;
+            font-size: 1.3rem;
             color: #c0d0e0;
             text-shadow: 0 0 10px rgba(100, 150, 255, 0.3);
         }
@@ -637,8 +712,9 @@
             background: transparent;
             border: none;
             color: #c0d0e0;
-            font-size: 1.5rem;
+            font-size: 1.4rem;
             cursor: pointer;
+            padding: 8px;
         }
 
         /* 动画效果 */
@@ -670,17 +746,13 @@
         /* 响应式设计 */
         @media (max-width: 768px) {
             .title {
-                font-size: 2.5rem;
+                font-size: 2.2rem;
             }
             .time-display {
-                font-size: 2.5rem;
-                letter-spacing: 2px;
-            }
-            .date-display {
-                font-size: 1.1rem;
+                font-size: 2.2rem;
             }
             .story-detail-title {
-                font-size: 1.6rem;
+                font-size: 1.5rem;
             }
             .delete-story-btn {
                 top: 8px;
@@ -690,108 +762,121 @@
         
         @media (max-width: 480px) {
             .title {
-                font-size: 2rem;
-                margin-bottom: 15px;
+                font-size: 1.9rem;
+                margin: 15px 0;
             }
             .subtitle {
                 font-size: 1rem;
                 margin-bottom: 20px;
             }
             .time-display {
-                font-size: 2rem;
+                font-size: 1.9rem;
                 letter-spacing: 1px;
             }
             .date-display {
-                font-size: 0.9rem;
+                font-size: 0.95rem;
             }
             .time-container {
-                padding: 15px;
+                padding: 12px 15px;
                 width: 95%;
             }
             .panel-title {
-                font-size: 1.5rem;
+                font-size: 1.4rem;
             }
             .story-detail-title {
-                font-size: 1.4rem;
+                font-size: 1.3rem;
             }
             .story-detail-content {
                 font-size: 1rem;
             }
             .delete-confirm-title {
-                font-size: 1.5rem;
+                font-size: 1.3rem;
             }
             .delete-confirm-text {
-                font-size: 1rem;
+                font-size: 0.95rem;
             }
             .confirm-delete-btn, .cancel-delete-btn {
-                padding: 10px 20px;
-                font-size: 1rem;
-            }
-            
-            /* 显示移动端导航 */
-            .mobile-nav {
-                display: flex;
-            }
-            .mobile-header {
-                display: flex;
+                padding: 9px 16px;
+                font-size: 0.95rem;
+                min-width: 100px;
             }
             
             /* 调整主内容区在移动端的间距 */
             .hero {
                 padding-top: 60px;
-                padding-bottom: 70px;
-                justify-content: flex-start;
+                padding-bottom: 60px;
             }
             
             /* 故事面板全屏优化 */
             .story-panel {
                 padding-top: 60px;
-                padding-bottom: 70px;
+                padding-bottom: 60px;
+            }
+            
+            .card-title {
+                font-size: 1.3rem;
+            }
+            
+            .mobile-nav, .mobile-header {
+                height: 55px;
+            }
+            
+            .nav-btn i {
+                font-size: 1.2rem;
             }
         }
 
         /* 针对非常小的屏幕 */
         @media (max-width: 360px) {
             .title {
-                font-size: 1.8rem;
+                font-size: 1.7rem;
             }
             .time-display {
-                font-size: 1.8rem;
+                font-size: 1.7rem;
             }
             .panel-title {
                 font-size: 1.3rem;
             }
             .delete-confirm-content {
-                padding: 20px 15px;
+                padding: 15px;
             }
             .delete-confirm-title {
-                font-size: 1.3rem;
+                font-size: 1.2rem;
             }
             .nav-btn {
-                padding: 8px 10px;
+                padding: 5px 8px;
                 font-size: 0.8rem;
             }
             .nav-btn i {
-                font-size: 1.3rem;
+                font-size: 1.1rem;
             }
             .mobile-header {
-                padding: 10px 15px;
+                padding: 10px 12px;
             }
             .mobile-title {
-                font-size: 1.3rem;
+                font-size: 1.2rem;
+            }
+            
+            .story-card {
+                padding: 15px;
+            }
+            
+            .card-icon {
+                width: 36px;
+                height: 36px;
             }
         }
         
         /* 安全区域适配 */
         @supports(padding: max(0px)) {
             .mobile-nav {
-                padding-bottom: max(10px, env(safe-area-inset-bottom));
+                padding-bottom: max(8px, env(safe-area-inset-bottom));
             }
-            .story-panel, .hero {
-                padding-bottom: max(20px, env(safe-area-inset-bottom));
+            .hero, .story-panel {
+                padding-bottom: max(60px, env(safe-area-inset-bottom));
             }
             .mobile-header {
-                padding-top: max(15px, env(safe-area-inset-top));
+                padding-top: max(12px, env(safe-area-inset-top));
             }
         }
     </style>
@@ -827,25 +912,48 @@
             <div class="date-display" id="currentDate">2023年1月1日 星期一</div>
         </div>
         
-        <!-- 移动端故事卡片 -->
-        <div class="story-cards">
+        <!-- 故事卡片容器 -->
+        <div class="stories-container">
+            <!-- 故事卡片1 -->
             <div class="story-card">
-                <div class="card-icon">
-                    <i class="fas fa-book-open"></i>
+                <div class="card-header">
+                    <div class="card-icon">
+                        <i class="fas fa-book-open"></i>
+                    </div>
+                    <div class="card-title">雨夜沉思</div>
                 </div>
                 <div class="card-content">
-                    <h3>雨夜沉思</h3>
-                    <p>昨夜的雨声伴我入眠，思绪如雨丝般绵长...</p>
+                    昨夜的雨声伴我入眠，思绪如雨丝般绵长。窗外的雨滴敲打着玻璃，像是在诉说着什么...
                 </div>
+                <div class="card-date">2023年10月15日</div>
             </div>
+            
+            <!-- 故事卡片2 -->
             <div class="story-card">
-                <div class="card-icon">
-                    <i class="fas fa-umbrella"></i>
+                <div class="card-header">
+                    <div class="card-icon">
+                        <i class="fas fa-umbrella"></i>
+                    </div>
+                    <div class="card-title">雨中邂逅</div>
                 </div>
                 <div class="card-content">
-                    <h3>雨中邂逅</h3>
-                    <p>那把红色的雨伞，成为阴雨天最亮丽的风景...</p>
+                    那把红色的雨伞，成为阴雨天最亮丽的风景。我们在雨中相遇，短暂却难忘...
                 </div>
+                <div class="card-date">2023年09月22日</div>
+            </div>
+            
+            <!-- 故事卡片3 -->
+            <div class="story-card">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <i class="fas fa-coffee"></i>
+                    </div>
+                    <div class="card-title">咖啡馆的雨</div>
+                </div>
+                <div class="card-content">
+                    坐在靠窗的位置，看着雨中的行人匆匆。咖啡的香气与雨水的清新交织在一起...
+                </div>
+                <div class="card-date">2023年08月30日</div>
             </div>
         </div>
     </div>
@@ -1001,8 +1109,6 @@
             setInterval(updateLocalTime, 1000);
             
             // 获取所有DOM元素
-            const recordBtn = document.getElementById('recordBtn');
-            const viewStoriesBtn = document.getElementById('viewStoriesBtn');
             const storyPanel = document.getElementById('storyPanel');
             const closePanel = document.getElementById('closePanel');
             const uploadArea = document.getElementById('uploadArea');
@@ -1080,38 +1186,6 @@
                 }
             });
             
-            // 拖拽上传功能
-            uploadArea.addEventListener('dragover', function(e) {
-                e.preventDefault();
-                this.style.borderColor = '#5d8aa8';
-                this.style.backgroundColor = 'rgba(10, 25, 41, 0.4)';
-            });
-            
-            uploadArea.addEventListener('dragleave', function() {
-                this.style.borderColor = 'rgba(100, 150, 200, 0.3)';
-                this.style.backgroundColor = 'transparent';
-            });
-            
-            uploadArea.addEventListener('drop', function(e) {
-                e.preventDefault();
-                this.style.borderColor = 'rgba(100, 150, 200, 0.3)';
-                this.style.backgroundColor = 'transparent';
-                
-                if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-                    imageUpload.files = e.dataTransfer.files;
-                    
-                    const reader = new FileReader();
-                    
-                    reader.onload = function(e) {
-                        imagePreview.src = e.target.result;
-                        imagePreview.style.display = 'block';
-                        previewContainer.style.display = 'block';
-                    }
-                    
-                    reader.readAsDataURL(e.dataTransfer.files[0]);
-                }
-            });
-            
             // 表单提交
             storyForm.addEventListener('submit', function(e) {
                 e.preventDefault();
@@ -1158,7 +1232,7 @@
                 if (stories.length === 0) {
                     storiesContainer.innerHTML = `
                         <div class="no-stories">
-                            <i class="fas fa-cloud-rain" style="font-size: 2.5rem; margin-bottom: 15px;"></i>
+                            <i class="fas fa-cloud-rain" style="font-size: 2.2rem; margin-bottom: 15px;"></i>
                             <p>你还没有记录任何故事...</p>
                             <p>在雨中，写下你的感受吧</p>
                         </div>
