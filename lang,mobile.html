@@ -1,0 +1,1376 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>孤雨之境 · 故事记录</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #0a1929, #1a3658, #0c2136);
+            font-family: 'Noto Serif SC', serif;
+            overflow-x: hidden;
+            color: #e0e0e0;
+            position: relative;
+            perspective: 1000px;
+            touch-action: manipulation;
+        }
+
+        /* 雨滴效果 */
+        .rain-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+            overflow: hidden;
+        }
+
+        .rain-drop {
+            position: absolute;
+            top: -50px;
+            width: 1px;
+            height: 30px;
+            background: linear-gradient(to bottom, rgba(255,255,255,0.3), rgba(255,255,255,0.1));
+            animation: rain-fall 1.5s linear infinite;
+        }
+
+        /* 雾气效果 */
+        .fog-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        .fog {
+            position: absolute;
+            bottom: 0;
+            width: 200%;
+            height: 300px;
+            background: linear-gradient(to top, rgba(10, 25, 41, 0.9) 0%, transparent 100%);
+            animation: fog-move 30s linear infinite;
+        }
+
+        .fog-1 {
+            opacity: 0.4;
+            animation-duration: 35s;
+        }
+
+        .fog-2 {
+            opacity: 0.6;
+            animation-duration: 25s;
+            animation-direction: reverse;
+        }
+
+        /* 主内容区域 - 移动端优化 */
+        .hero {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            padding: 15px;
+            text-align: center;
+            z-index: 10;
+        }
+
+        .title {
+            color: #f0f0f0;
+            font-size: 2.8rem; /* 减小标题字体大小 */
+            text-shadow: 0 0 15px rgba(100, 150, 255, 0.3);
+            margin-bottom: 20px; /* 减小下边距 */
+            line-height: 1.3;
+            letter-spacing: 1px; /* 减小字间距 */
+            font-weight: 700;
+            position: relative;
+            animation: title-glow 4s infinite alternate;
+            padding: 0 10px;
+        }
+
+        .subtitle {
+            font-size: 1.2rem; /* 减小副标题字体大小 */
+            color: #a0b0c0;
+            max-width: 90%; /* 增加最大宽度限制 */
+            line-height: 1.6;
+            margin-bottom: 30px; /* 减小下边距 */
+            text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+            padding: 0 15px;
+        }
+
+        /* 时间显示样式 */
+        .time-container {
+            background: rgba(10, 25, 41, 0.7);
+            padding: 20px 30px; /* 减小内边距 */
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(100, 150, 200, 0.2);
+            backdrop-filter: blur(8px);
+            margin-top: 20px; /* 减小上边距 */
+            text-align: center;
+            width: 90%; /* 增加宽度限制 */
+            max-width: 500px; /* 最大宽度 */
+        }
+
+        .time-display {
+            font-size: 3rem; /* 减小时间字体大小 */
+            font-weight: 300;
+            letter-spacing: 3px; /* 减小字间距 */
+            color: #c0d0e0;
+            margin-bottom: 10px; /* 减小下边距 */
+            text-shadow: 0 0 20px rgba(100, 150, 255, 0.4);
+            font-family: 'Courier New', monospace;
+        }
+
+        .date-display {
+            font-size: 1.2rem; /* 减小日期字体大小 */
+            color: #8a9ba8;
+            letter-spacing: 1px; /* 减小字间距 */
+            text-transform: uppercase;
+        }
+
+        /* 记录故事按钮 - 移动端优化 */
+        .record-btn {
+            position: fixed;
+            bottom: 20px; /* 调整位置 */
+            left: 20px; /* 调整位置 */
+            background: linear-gradient(135deg, #1e3c5f, #142a4a);
+            color: #c0d0e0;
+            border: 1px solid rgba(100, 150, 200, 0.2);
+            border-radius: 50%;
+            width: 70px; /* 减小尺寸 */
+            height: 70px; /* 减小尺寸 */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 100;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        .record-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .record-btn i {
+            font-size: 2rem; /* 减小图标大小 */
+            color: #5d8aa8;
+            text-shadow: 0 0 10px rgba(100, 150, 255, 0.3);
+        }
+
+        /* 查看故事按钮 - 移动端优化 */
+        .view-stories-btn {
+            position: fixed;
+            bottom: 100px; /* 调整位置 */
+            left: 20px; /* 调整位置 */
+            background: linear-gradient(135deg, #2a4a7a, #1e3c5f);
+            color: #c0d0e0;
+            border: 1px solid rgba(100, 150, 200, 0.2);
+            border-radius: 50%;
+            width: 60px; /* 减小尺寸 */
+            height: 60px; /* 减小尺寸 */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 100;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        .view-stories-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .view-stories-btn i {
+            font-size: 1.8rem; /* 减小图标大小 */
+            color: #8ab6d6;
+            text-shadow: 0 0 10px rgba(100, 150, 255, 0.3);
+        }
+
+        /* 故事记录面板 - 移动端优化 */
+        .story-panel {
+            position: fixed;
+            top: 0;
+            right: -100%; /* 调整为从右侧滑入 */
+            width: 100%; /* 移动设备上全宽 */
+            height: 100%;
+            background: linear-gradient(135deg, rgba(20, 42, 74, 0.95), rgba(12, 33, 54, 0.95));
+            z-index: 1000;
+            padding: 20px; /* 减小内边距 */
+            transition: transform 0.5s ease;
+            box-shadow: -5px 0 25px rgba(0, 0, 0, 0.5);
+            border-left: 1px solid rgba(100, 150, 200, 0.2);
+            overflow-y: auto;
+            backdrop-filter: blur(10px);
+            transform: translateX(100%);
+        }
+
+        .story-panel.active {
+            transform: translateX(0);
+            right: 0;
+        }
+
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px; /* 减小下边距 */
+            padding-bottom: 10px; /* 减小内边距 */
+            border-bottom: 1px solid rgba(100, 150, 200, 0.2);
+        }
+
+        .panel-title {
+            font-size: 1.8rem; /* 减小标题字体大小 */
+            color: #c0d0e0;
+            text-shadow: 0 0 10px rgba(100, 150, 255, 0.3);
+        }
+
+        .close-panel {
+            background: transparent;
+            border: none;
+            color: #8a9ba8;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: color 0.3s;
+            padding: 10px; /* 增加触摸区域 */
+        }
+
+        .close-panel:hover {
+            color: #c0d0e0;
+        }
+
+        .story-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px; /* 减小间隙 */
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-label {
+            font-size: 1.1rem; /* 减小标签字体大小 */
+            color: #a0b0c0;
+        }
+
+        .form-input, .form-textarea {
+            background: rgba(10, 25, 41, 0.6);
+            border: 1px solid rgba(100, 150, 200, 0.2);
+            border-radius: 8px;
+            padding: 12px 15px;
+            color: #e0e0e0;
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .form-input:focus, .form-textarea:focus {
+            outline: none;
+            border-color: #5d8aa8;
+            box-shadow: 0 0 10px rgba(100, 150, 255, 0.3);
+        }
+
+        .form-textarea {
+            min-height: 150px; /* 保持高度 */
+            resize: vertical;
+        }
+
+        .upload-area {
+            border: 2px dashed rgba(100, 150, 200, 0.3);
+            border-radius: 8px;
+            padding: 20px; /* 减小内边距 */
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .upload-area:hover {
+            border-color: #5d8aa8;
+            background: rgba(10, 25, 41, 0.3);
+        }
+
+        .upload-icon {
+            font-size: 2rem; /* 减小图标大小 */
+            color: #5d8aa8;
+            margin-bottom: 10px; /* 减小下边距 */
+        }
+
+        .upload-text {
+            color: #a0b0c0;
+            margin-bottom: 10px; /* 减小下边距 */
+        }
+
+        .upload-btn {
+            background: linear-gradient(to right, #4a6572, #344955);
+            color: #e0e0e0;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .upload-btn:hover {
+            background: linear-gradient(to right, #5a7582, #445965);
+        }
+
+        .preview-container {
+            margin-top: 15px; /* 减小上边距 */
+            display: none;
+        }
+
+        .preview-title {
+            font-size: 1.1rem; /* 减小字体大小 */
+            color: #a0b0c0;
+            margin-bottom: 8px; /* 减小下边距 */
+        }
+
+        .image-preview {
+            max-width: 100%;
+            max-height: 200px;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .submit-btn {
+            background: linear-gradient(to right, #4a6572, #344955);
+            color: #e0e0e0;
+            border: none;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 15px; /* 减小上边距 */
+        }
+
+        .submit-btn:hover {
+            background: linear-gradient(to right, #5a7582, #445965);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        /* 故事列表样式 - 移动端优化 */
+        .stories-list {
+            display: none;
+            flex-direction: column;
+            gap: 15px; /* 减小间隙 */
+            margin-top: 15px; /* 减小上边距 */
+        }
+
+        .story-item {
+            background: rgba(10, 25, 41, 0.6);
+            border-radius: 8px;
+            padding: 15px; /* 减小内边距 */
+            border: 1px solid rgba(100, 150, 200, 0.2);
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .story-item:hover {
+            transform: translateX(5px);
+            border-color: #5d8aa8;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .story-title {
+            font-size: 1.3rem; /* 减小字体大小 */
+            color: #c0d0e0;
+            margin-bottom: 8px; /* 减小下边距 */
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .story-date {
+            font-size: 0.9rem; /* 减小字体大小 */
+            color: #8a9ba8;
+        }
+
+        .story-preview {
+            color: #a0b0c0;
+            font-size: 1rem; /* 减小字体大小 */
+            line-height: 1.5;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* 故事详情样式 - 移动端优化 */
+        .story-detail-container {
+            display: none;
+            flex-direction: column;
+            gap: 15px; /* 减小间隙 */
+            margin-top: 15px; /* 减小上边距 */
+            animation: fadeIn 0.5s ease;
+        }
+
+        .story-detail-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px; /* 减小下边距 */
+        }
+
+        .story-detail-title {
+            font-size: 1.8rem; /* 减小字体大小 */
+            color: #c0d0e0;
+        }
+
+        .story-detail-date {
+            font-size: 1rem; /* 减小字体大小 */
+            color: #8a9ba8;
+        }
+
+        .story-detail-content {
+            font-size: 1.1rem; /* 减小字体大小 */
+            line-height: 1.7;
+            color: #d0e0f0;
+            margin-bottom: 15px; /* 减小下边距 */
+            white-space: pre-wrap;
+            background: rgba(10, 25, 41, 0.3);
+            padding: 15px; /* 减小内边距 */
+            border-radius: 8px;
+            border-left: 3px solid #5d8aa8;
+        }
+
+        .story-detail-image {
+            max-width: 100%;
+            max-height: 250px; /* 减小高度 */
+            border-radius: 8px;
+            margin-top: 10px;
+            display: block;
+        }
+
+        .back-btn {
+            background: linear-gradient(to right, #4a6572, #344955);
+            color: #e0e0e0;
+            border: none;
+            padding: 10px 15px; /* 减小内边距 */
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 15px; /* 减小上边距 */
+            font-size: 1rem; /* 减小字体大小 */
+            align-self: flex-start;
+        }
+
+        .back-btn:hover {
+            background: linear-gradient(to right, #5a7582, #445965);
+        }
+
+        .no-stories {
+            text-align: center;
+            padding: 30px; /* 减小内边距 */
+            color: #8a9ba8;
+            font-size: 1.2rem; /* 减小字体大小 */
+        }
+
+        /* 孤树剪影 - 移动端优化 */
+        .lone-tree {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 150px; /* 减小宽度 */
+            height: 225px; /* 减小高度 */
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 300"><path d="M100 0 Q150 100 130 150 Q180 200 120 220 Q150 250 100 300 Q50 250 80 220 Q20 200 70 150 Q50 100 100 0" fill="black" opacity="0.3"/></svg>') no-repeat bottom;
+            z-index: 5;
+        }
+
+        /* 删除按钮样式 - 移动端优化 */
+        .delete-story-btn {
+            position: absolute;
+            top: 10px; /* 调整位置 */
+            right: 10px; /* 调整位置 */
+            background: rgba(180, 50, 50, 0.2);
+            border: none;
+            border-radius: 4px;
+            color: #ff9b9b;
+            cursor: pointer;
+            padding: 6px 10px; /* 增大内边距 */
+            transition: all 0.3s;
+            z-index: 10;
+            font-size: 1rem; /* 增大字体大小 */
+        }
+
+        .delete-story-btn:hover {
+            background: rgba(200, 70, 70, 0.4);
+            color: #ffcccc;
+        }
+
+        /* 确认删除弹窗 - 移动端优化 */
+        .delete-confirm-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(10, 20, 30, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+            padding: 15px;
+        }
+
+        .delete-confirm-modal.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .delete-confirm-content {
+            background: linear-gradient(135deg, #1a2e42, #0e1e2f);
+            border-radius: 12px;
+            padding: 25px; /* 调整内边距 */
+            width: 90%; /* 相对宽度 */
+            max-width: 400px; /* 最大宽度 */
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(180, 80, 80, 0.3);
+            transform: translateY(20px);
+            transition: transform 0.3s;
+        }
+
+        .delete-confirm-modal.active .delete-confirm-content {
+            transform: translateY(0);
+        }
+
+        .delete-confirm-title {
+            font-size: 1.8rem; /* 减小字体大小 */
+            color: #ff9b9b;
+            margin-bottom: 15px; /* 减小下边距 */
+        }
+
+        .delete-confirm-text {
+            font-size: 1.1rem; /* 减小字体大小 */
+            color: #c0d0e0;
+            margin-bottom: 25px; /* 减小下边距 */
+            line-height: 1.5; /* 调整行高 */
+        }
+
+        .delete-confirm-buttons {
+            display: flex;
+            gap: 15px; /* 减小间隙 */
+            justify-content: center;
+        }
+
+        .confirm-delete-btn, .cancel-delete-btn {
+            padding: 12px 25px; /* 增大内边距 */
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1.1rem; /* 增大字体大小 */
+            transition: all 0.3s;
+            min-width: 120px; /* 最小宽度 */
+        }
+
+        .confirm-delete-btn {
+            background: linear-gradient(135deg, #c04848, #8c3232);
+            color: #fff;
+        }
+
+        .confirm-delete-btn:hover {
+            background: linear-gradient(135deg, #d05858, #9c4242);
+            transform: translateY(-2px);
+        }
+
+        .cancel-delete-btn {
+            background: linear-gradient(135deg, #4a6572, #344955);
+            color: #e0e0e0;
+        }
+
+        .cancel-delete-btn:hover {
+            background: linear-gradient(135deg, #5a7582, #445965);
+            transform: translateY(-2px);
+        }
+        
+        /* 移动端底部导航 */
+        .mobile-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(20, 42, 74, 0.95);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 10px 0;
+            z-index: 90;
+            display: none;
+            border-top: 1px solid rgba(100, 150, 200, 0.2);
+            backdrop-filter: blur(10px);
+        }
+        
+        .nav-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #c0d0e0;
+            font-size: 0.9rem;
+            text-decoration: none;
+            padding: 8px 15px;
+            border-radius: 20px;
+            transition: all 0.3s;
+        }
+        
+        .nav-btn i {
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+            color: #8ab6d6;
+        }
+        
+        .nav-btn.active {
+            background: rgba(100, 150, 200, 0.2);
+        }
+        
+        /* 移动端标题栏 */
+        .mobile-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(20, 42, 74, 0.95);
+            padding: 15px;
+            z-index: 90;
+            display: none;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(100, 150, 200, 0.2);
+            backdrop-filter: blur(10px);
+        }
+        
+        .mobile-title {
+            font-size: 1.5rem;
+            color: #c0d0e0;
+            text-shadow: 0 0 10px rgba(100, 150, 255, 0.3);
+        }
+        
+        .mobile-menu-btn {
+            background: transparent;
+            border: none;
+            color: #c0d0e0;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* 动画效果 */
+        @keyframes rain-fall {
+            0% { transform: translateY(0) translateX(0); opacity: 1; }
+            100% { transform: translateY(100vh) translateX(20px); opacity: 0.2; }
+        }
+
+        @keyframes fog-move {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        @keyframes title-glow {
+            0% { text-shadow: 0 0 15px rgba(100, 150, 255, 0.3); }
+            100% { text-shadow: 0 0 25px rgba(100, 150, 255, 0.6), 0 0 40px rgba(80, 120, 200, 0.3); }
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateX(100%); }
+            to { transform: translateX(0); }
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .title {
+                font-size: 2.5rem;
+            }
+            .time-display {
+                font-size: 2.5rem;
+                letter-spacing: 2px;
+            }
+            .date-display {
+                font-size: 1.1rem;
+            }
+            .record-btn {
+                width: 65px;
+                height: 65px;
+                bottom: 15px;
+                left: 15px;
+            }
+            .view-stories-btn {
+                width: 55px;
+                height: 55px;
+                bottom: 90px;
+                left: 15px;
+            }
+            .story-detail-title {
+                font-size: 1.6rem;
+            }
+            .delete-story-btn {
+                top: 8px;
+                right: 8px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .title {
+                font-size: 2rem;
+                margin-bottom: 15px;
+            }
+            .subtitle {
+                font-size: 1rem;
+                margin-bottom: 20px;
+            }
+            .time-display {
+                font-size: 2rem;
+                letter-spacing: 1px;
+            }
+            .date-display {
+                font-size: 0.9rem;
+            }
+            .time-container {
+                padding: 15px;
+                width: 95%;
+            }
+            .record-btn, .view-stories-btn {
+                width: 60px;
+                height: 60px;
+            }
+            .record-btn {
+                bottom: 80px;
+                left: auto;
+                right: 20px;
+            }
+            .view-stories-btn {
+                bottom: 20px;
+                left: auto;
+                right: 20px;
+            }
+            .panel-title {
+                font-size: 1.5rem;
+            }
+            .story-detail-title {
+                font-size: 1.4rem;
+            }
+            .story-detail-content {
+                font-size: 1rem;
+            }
+            .delete-confirm-title {
+                font-size: 1.5rem;
+            }
+            .delete-confirm-text {
+                font-size: 1rem;
+            }
+            .confirm-delete-btn, .cancel-delete-btn {
+                padding: 10px 20px;
+                font-size: 1rem;
+            }
+            
+            /* 显示移动端导航 */
+            .mobile-nav {
+                display: flex;
+            }
+            .mobile-header {
+                display: flex;
+            }
+            
+            /* 隐藏桌面端按钮 */
+            .record-btn, .view-stories-btn {
+                display: none;
+            }
+        }
+
+        /* 针对非常小的屏幕 */
+        @media (max-width: 360px) {
+            .title {
+                font-size: 1.8rem;
+            }
+            .time-display {
+                font-size: 1.8rem;
+            }
+            .panel-title {
+                font-size: 1.3rem;
+            }
+            .delete-confirm-content {
+                padding: 20px 15px;
+            }
+            .delete-confirm-title {
+                font-size: 1.3rem;
+            }
+            .nav-btn {
+                padding: 8px 10px;
+                font-size: 0.8rem;
+            }
+            .nav-btn i {
+                font-size: 1.3rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 雨滴效果 -->
+    <div class="rain-container" id="rainContainer"></div>
+    
+    <!-- 雾气效果 -->
+    <div class="fog-container">
+        <div class="fog fog-1"></div>
+        <div class="fog fog-2"></div>
+    </div>
+    
+    <!-- 孤树剪影 -->
+    <div class="lone-tree"></div>
+    
+    <!-- 移动端标题栏 -->
+    <div class="mobile-header">
+        <div class="mobile-title">孤雨之境</div>
+        <button class="mobile-menu-btn" id="mobileMenuBtn">
+            <i class="fas fa-bars"></i>
+        </button>
+    </div>
+
+    <!-- 主内容区 -->
+    <div class="hero">
+        <h1 class="title">孤雨之境 · 故事</h1>
+        <p class="subtitle">在雨中，每个故事都像雨滴一样独特而短暂...记录下你的孤雨时刻</p>
+        
+        <div class="time-container">
+            <div class="time-display" id="currentTime">00:00:00</div>
+            <div class="date-display" id="currentDate">2023年1月1日 星期一</div>
+        </div>
+    </div>
+
+    <!-- 记录故事按钮 -->
+    <div class="record-btn" id="recordBtn">
+        <i class="fas fa-book"></i>
+    </div>
+    
+    <!-- 查看故事按钮 -->
+    <div class="view-stories-btn" id="viewStoriesBtn">
+        <i class="fas fa-history"></i>
+    </div>
+    
+    <!-- 故事记录面板 -->
+    <div class="story-panel" id="storyPanel">
+        <div class="panel-header">
+            <h2 class="panel-title" id="panelTitle">记录孤雨故事</h2>
+            <button class="close-panel" id="closePanel">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        
+        <!-- 故事表单 -->
+        <form class="story-form" id="storyForm">
+            <div class="form-group">
+                <label class="form-label">故事标题</label>
+                <input type="text" class="form-input" id="storyTitle" placeholder="为你的故事命名..." required>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">你的故事</label>
+                <textarea class="form-textarea" id="storyContent" placeholder="在这片雨中，我感受到..." required></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">上传雨景照片</label>
+                <div class="upload-area" id="uploadArea">
+                    <i class="fas fa-cloud-upload-alt upload-icon"></i>
+                    <p class="upload-text">点击或拖拽照片到此处</p>
+                    <button type="button" class="upload-btn">选择文件</button>
+                    <input type="file" id="imageUpload" accept="image/*" style="display: none;">
+                </div>
+                
+                <div class="preview-container" id="previewContainer">
+                    <p class="preview-title">预览</p>
+                    <img class="image-preview" id="imagePreview" alt="图片预览">
+                </div>
+            </div>
+            
+            <button type="submit" class="submit-btn">保存故事</button>
+        </form>
+        
+        <!-- 故事列表 -->
+        <div class="stories-list" id="storiesList">
+            <h3 class="panel-title">你的孤雨故事</h3>
+            <div id="storiesContainer"></div>
+        </div>
+        
+        <!-- 故事详情容器 -->
+        <div class="story-detail-container" id="storyDetailContainer"></div>
+    </div>
+
+    <!-- 删除确认弹窗 -->
+    <div class="delete-confirm-modal" id="deleteConfirmModal">
+        <div class="delete-confirm-content">
+            <h3 class="delete-confirm-title"><i class="fas fa-exclamation-triangle"></i> 删除故事</h3>
+            <p class="delete-confirm-text">这个故事将像雨滴一样永远消失，不可恢复。你确定要删除吗？</p>
+            <div class="delete-confirm-buttons">
+                <button class="cancel-delete-btn" id="cancelDeleteBtn">取消</button>
+                <button class="confirm-delete-btn" id="confirmDeleteBtn">确认删除</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 移动端导航 -->
+    <div class="mobile-nav">
+        <a href="#" class="nav-btn" id="mobileHomeBtn">
+            <i class="fas fa-home"></i>
+            <span>首页</span>
+        </a>
+        <a href="#" class="nav-btn" id="mobileRecordBtn">
+            <i class="fas fa-book"></i>
+            <span>记录</span>
+        </a>
+        <a href="#" class="nav-btn" id="mobileStoriesBtn">
+            <i class="fas fa-history"></i>
+            <span>故事</span>
+        </a>
+    </div>
+
+    <!-- 雨声音频 -->
+    <audio id="rainSound" loop>
+        <source src="https://assets.mixkit.co/sfx/preview/mixkit-rain-loop-1243.mp3" type="audio/mpeg">
+    </audio>
+
+    <script>
+        // 创建雨滴
+        function createRain() {
+            const rainContainer = document.getElementById('rainContainer');
+            const rainCount = 100; // 减少雨滴数量提高性能
+            
+            for (let i = 0; i < rainCount; i++) {
+                const drop = document.createElement('div');
+                drop.className = 'rain-drop';
+                drop.style.left = Math.random() * 100 + 'vw';
+                drop.style.animationDelay = Math.random() * 5 + 's';
+                drop.style.animationDuration = (0.5 + Math.random() * 1) + 's';
+                drop.style.opacity = 0.1 + Math.random() * 0.4;
+                drop.style.height = 20 + Math.random() * 30 + 'px';
+                rainContainer.appendChild(drop);
+            }
+        }
+        
+        // 播放雨声
+        function playRainSound() {
+            const rainSound = document.getElementById('rainSound');
+            rainSound.volume = 0.3;
+            
+            // 尝试播放音频
+            const playPromise = rainSound.play();
+            
+            if (playPromise !== undefined) {
+                playPromise.catch(() => {
+                    // 自动播放失败，等待用户交互
+                    document.addEventListener('click', () => {
+                        rainSound.play();
+                    }, { once: true });
+                });
+            }
+        }
+        
+        // 更新本地时间
+        function updateLocalTime() {
+            const now = new Date();
+            
+            // 格式化时间
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            
+            // 格式化日期
+            const year = now.getFullYear();
+            const month = now.getMonth() + 1;
+            const day = now.getDate();
+            
+            // 星期几
+            const weekdays = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
+            const weekday = weekdays[now.getDay()];
+            
+            // 更新显示
+            document.getElementById('currentTime').textContent = `${hours}:${minutes}:${seconds}`;
+            document.getElementById('currentDate').textContent = `${year}年${month}月${day}日 ${weekday}`;
+        }
+        
+        // 初始化页面
+        window.onload = function() {
+            createRain();
+            playRainSound();
+            
+            // 初始化时间显示
+            updateLocalTime();
+            setInterval(updateLocalTime, 1000);
+            
+            // 获取所有DOM元素
+            const recordBtn = document.getElementById('recordBtn');
+            const viewStoriesBtn = document.getElementById('viewStoriesBtn');
+            const storyPanel = document.getElementById('storyPanel');
+            const closePanel = document.getElementById('closePanel');
+            const uploadArea = document.getElementById('uploadArea');
+            const imageUpload = document.getElementById('imageUpload');
+            const imagePreview = document.getElementById('imagePreview');
+            const previewContainer = document.getElementById('previewContainer');
+            const storyForm = document.getElementById('storyForm');
+            const storiesList = document.getElementById('storiesList');
+            const storiesContainer = document.getElementById('storiesContainer');
+            const panelTitle = document.getElementById('panelTitle');
+            const storyDetailContainer = document.getElementById('storyDetailContainer');
+            const deleteConfirmModal = document.getElementById('deleteConfirmModal');
+            const cancelDeleteBtn = document.getElementById('cancelDeleteBtn');
+            const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
+            const mobileRecordBtn = document.getElementById('mobileRecordBtn');
+            const mobileStoriesBtn = document.getElementById('mobileStoriesBtn');
+            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+            
+            // 当前待删除的故事ID
+            let storyToDelete = null;
+            
+            // 移动端菜单按钮事件
+            mobileMenuBtn.addEventListener('click', function() {
+                storyPanel.classList.toggle('active');
+                panelTitle.textContent = '记录孤雨故事';
+                storyForm.style.display = 'flex';
+                storiesList.style.display = 'none';
+                storyDetailContainer.style.display = 'none';
+            });
+            
+            // 打开故事面板
+            function openRecordPanel() {
+                storyPanel.classList.add('active');
+                storyForm.style.display = 'flex';
+                storiesList.style.display = 'none';
+                storyDetailContainer.style.display = 'none';
+                panelTitle.textContent = '记录孤雨故事';
+            }
+            
+            // 打开故事列表
+            function openStoriesPanel() {
+                storyPanel.classList.add('active');
+                storyForm.style.display = 'none';
+                storiesList.style.display = 'flex';
+                storyDetailContainer.style.display = 'none';
+                panelTitle.textContent = '孤雨故事集';
+                loadStories();
+            }
+            
+            recordBtn.addEventListener('click', openRecordPanel);
+            mobileRecordBtn.addEventListener('click', openRecordPanel);
+            
+            viewStoriesBtn.addEventListener('click', openStoriesPanel);
+            mobileStoriesBtn.addEventListener('click', openStoriesPanel);
+            
+            // 关闭故事面板
+            closePanel.addEventListener('click', () => {
+                storyPanel.classList.remove('active');
+            });
+            
+            // 上传区域点击事件
+            uploadArea.addEventListener('click', () => {
+                imageUpload.click();
+            });
+            
+            // 文件选择事件
+            imageUpload.addEventListener('change', function(e) {
+                if (this.files && this.files[0]) {
+                    const reader = new FileReader();
+                    
+                    reader.onload = function(e) {
+                        imagePreview.src = e.target.result;
+                        imagePreview.style.display = 'block';
+                        previewContainer.style.display = 'block';
+                    }
+                    
+                    reader.readAsDataURL(this.files[0]);
+                }
+            });
+            
+            // 拖拽上传功能
+            uploadArea.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                this.style.borderColor = '#5d8aa8';
+                this.style.backgroundColor = 'rgba(10, 25, 41, 0.4)';
+            });
+            
+            uploadArea.addEventListener('dragleave', function() {
+                this.style.borderColor = 'rgba(100, 150, 200, 0.3)';
+                this.style.backgroundColor = 'transparent';
+            });
+            
+            uploadArea.addEventListener('drop', function(e) {
+                e.preventDefault();
+                this.style.borderColor = 'rgba(100, 150, 200, 0.3)';
+                this.style.backgroundColor = 'transparent';
+                
+                if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+                    imageUpload.files = e.dataTransfer.files;
+                    
+                    const reader = new FileReader();
+                    
+                    reader.onload = function(e) {
+                        imagePreview.src = e.target.result;
+                        imagePreview.style.display = 'block';
+                        previewContainer.style.display = 'block';
+                    }
+                    
+                    reader.readAsDataURL(e.dataTransfer.files[0]);
+                }
+            });
+            
+            // 表单提交
+            storyForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const title = document.getElementById('storyTitle').value;
+                const content = document.getElementById('storyContent').value;
+                
+                // 创建故事对象
+                const story = {
+                    id: Date.now(),
+                    title: title,
+                    content: content,
+                    date: new Date().toLocaleString(),
+                    image: imagePreview.src || null
+                };
+                
+                // 保存故事到本地存储
+                saveStory(story);
+                
+                // 显示成功消息
+                showMessage('故事已保存！在雨中，你的记忆将永存...');
+                
+                // 重置表单
+                storyForm.reset();
+                imagePreview.style.display = 'none';
+                previewContainer.style.display = 'none';
+                
+                // 关闭面板
+                storyPanel.classList.remove('active');
+            });
+            
+            // 保存故事到本地存储
+            function saveStory(story) {
+                let stories = JSON.parse(localStorage.getItem('rainStories')) || [];
+                stories.unshift(story); // 新故事添加到开头
+                localStorage.setItem('rainStories', JSON.stringify(stories));
+            }
+            
+            // 加载故事列表
+            function loadStories() {
+                const stories = JSON.parse(localStorage.getItem('rainStories')) || [];
+                storiesContainer.innerHTML = '';
+                
+                if (stories.length === 0) {
+                    storiesContainer.innerHTML = `
+                        <div class="no-stories">
+                            <i class="fas fa-cloud-rain" style="font-size: 2.5rem; margin-bottom: 15px;"></i>
+                            <p>你还没有记录任何故事...</p>
+                            <p>在雨中，写下你的感受吧</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                stories.forEach(story => {
+                    const storyElement = document.createElement('div');
+                    storyElement.className = 'story-item';
+                    storyElement.dataset.id = story.id;
+                    
+                    // 截取预览内容
+                    const previewContent = story.content.length > 100 ? 
+                        story.content.substring(0, 100) + '...' : story.content;
+                    
+                    storyElement.innerHTML = `
+                        <div class="story-title">
+                            <span>${story.title}</span>
+                            <span class="story-date">${formatDate(story.date)}</span>
+                        </div>
+                        <div class="story-preview">${previewContent}</div>
+                        <button class="delete-story-btn" data-id="${story.id}">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                    `;
+                    
+                    storiesContainer.appendChild(storyElement);
+                    
+                    // 添加点击事件
+                    storyElement.addEventListener('click', function(e) {
+                        // 确保点击的不是删除按钮
+                        if (!e.target.closest('.delete-story-btn')) {
+                            showStoryDetail(story);
+                        }
+                    });
+                    
+                    // 为删除按钮添加事件
+                    const deleteBtn = storyElement.querySelector('.delete-story-btn');
+                    deleteBtn.addEventListener('click', function(e) {
+                        e.stopPropagation(); // 阻止冒泡，避免触发故事项点击事件
+                        storyToDelete = story.id;
+                        deleteConfirmModal.classList.add('active');
+                    });
+                });
+            }
+            
+            // 显示故事详情
+            function showStoryDetail(story) {
+                storiesList.style.display = 'none';
+                storyDetailContainer.style.display = 'flex';
+                
+                storyDetailContainer.innerHTML = `
+                    <div class="story-detail-header">
+                        <h3 class="story-detail-title">${story.title}</h3>
+                        <div class="story-detail-date">${formatDate(story.date)}</div>
+                    </div>
+                    <div class="story-detail-content">${story.content}</div>
+                    ${story.image ? `<img src="${story.image}" class="story-detail-image">` : ''}
+                    <div style="display: flex; gap: 10px; margin-top: 20px;">
+                        <button class="back-btn" id="backToListBtn">
+                            <i class="fas fa-arrow-left"></i> 返回列表
+                        </button>
+                        <button class="delete-story-btn" id="deleteInDetailBtn" style="position: static;">
+                            <i class="fas fa-trash-alt"></i> 删除故事
+                        </button>
+                    </div>
+                `;
+                
+                // 添加返回按钮事件
+                document.getElementById('backToListBtn').addEventListener('click', function() {
+                    storyDetailContainer.style.display = 'none';
+                    storiesList.style.display = 'flex';
+                });
+                
+                // 添加详情页删除按钮事件
+                document.getElementById('deleteInDetailBtn').addEventListener('click', function() {
+                    storyToDelete = story.id;
+                    deleteConfirmModal.classList.add('active');
+                });
+            }
+            
+            // 删除故事
+            function deleteStory(storyId) {
+                let stories = JSON.parse(localStorage.getItem('rainStories')) || [];
+                stories = stories.filter(story => story.id !== storyId);
+                localStorage.setItem('rainStories', JSON.stringify(stories));
+                
+                // 关闭确认弹窗
+                deleteConfirmModal.classList.remove('active');
+                
+                // 显示删除成功消息
+                showMessage('故事已删除...如雨滴消逝在风中');
+                
+                // 重新加载故事列表
+                loadStories();
+                
+                // 如果当前在详情页，返回列表
+                if (storyDetailContainer.style.display === 'flex') {
+                    storyDetailContainer.style.display = 'none';
+                    storiesList.style.display = 'flex';
+                }
+            }
+            
+            // 确认删除按钮事件
+            confirmDeleteBtn.addEventListener('click', function() {
+                if (storyToDelete) {
+                    deleteStory(storyToDelete);
+                }
+            });
+            
+            // 取消删除按钮事件
+            cancelDeleteBtn.addEventListener('click', function() {
+                deleteConfirmModal.classList.remove('active');
+                storyToDelete = null;
+            });
+            
+            // 格式化日期
+            function formatDate(dateString) {
+                const date = new Date(dateString);
+                return date.toLocaleDateString('zh-CN', {
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+            }
+            
+            // 显示消息
+            function showMessage(message) {
+                const messageElement = document.createElement('div');
+                messageElement.textContent = message;
+                messageElement.style.position = 'fixed';
+                messageElement.style.top = '20px';
+                messageElement.style.left = '50%';
+                messageElement.style.transform = 'translateX(-50%)';
+                messageElement.style.backgroundColor = 'rgba(20, 42, 74, 0.9)';
+                messageElement.style.color = '#c0d0e0';
+                messageElement.style.padding = '12px 25px'; /* 减小内边距 */
+                messageElement.style.borderRadius = '8px';
+                messageElement.style.boxShadow = '0 5px 15px rgba(0,0,0,0.3)';
+                messageElement.style.zIndex = '2000';
+                messageElement.style.border = '1px solid rgba(100, 150, 200, 0.3)';
+                messageElement.style.opacity = '0';
+                messageElement.style.transition = 'opacity 0.5s ease';
+                messageElement.style.fontSize = '0.95rem'; /* 减小字体大小 */
+                messageElement.style.maxWidth = '90%'; /* 增加最大宽度限制 */
+                messageElement.style.textAlign = 'center';
+                
+                document.body.appendChild(messageElement);
+                
+                // 淡入效果
+                setTimeout(() => {
+                    messageElement.style.opacity = '1';
+                }, 10);
+                
+                // 3秒后淡出并移除
+                setTimeout(() => {
+                    messageElement.style.opacity = '0';
+                    setTimeout(() => {
+                        document.body.removeChild(messageElement);
+                    }, 500);
+                }, 3000);
+            }
+            
+            // 移动端滑动关闭面板
+            let touchStartX = 0;
+            storyPanel.addEventListener('touchstart', function(e) {
+                touchStartX = e.touches[0].clientX;
+            });
+            
+            storyPanel.addEventListener('touchmove', function(e) {
+                const touchX = e.touches[0].clientX;
+                const diff = touchX - touchStartX;
+                
+                if (diff > 50) { // 向右滑动超过50px
+                    storyPanel.classList.remove('active');
+                }
+            });
+        };
+    </script>
+</body>
+</html>
