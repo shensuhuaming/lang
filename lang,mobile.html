@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>孤雨之境 · 故事记录</title>
+    <title>孤雨之境 · 多图故事记录</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -322,6 +322,7 @@
             text-align: center;
             cursor: pointer;
             transition: all 0.3s;
+            position: relative;
         }
 
         .upload-area:hover {
@@ -356,22 +357,73 @@
             background: linear-gradient(to right, #5a7582, #445965);
         }
 
+        /* 多图预览容器 */
         .preview-container {
             margin-top: 12px;
             display: none;
+            flex-direction: column;
+            gap: 15px;
         }
 
         .preview-title {
             font-size: 1rem;
             color: #a0b0c0;
-            margin-bottom: 8px;
+        }
+
+        /* 图片网格布局 */
+        .images-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-top: 8px;
+        }
+
+        .image-preview-container {
+            position: relative;
+            border-radius: 8px;
+            overflow: hidden;
+            aspect-ratio: 1/1;
+            transition: all 0.3s;
+        }
+
+        .image-preview-container:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(100, 150, 255, 0.3);
         }
 
         .image-preview {
-            max-width: 100%;
-            max-height: 180px;
-            border-radius: 8px;
-            display: none;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .delete-image-btn {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            width: 24px;
+            height: 24px;
+            background: rgba(180, 50, 50, 0.7);
+            border: none;
+            border-radius: 50%;
+            color: white;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            opacity: 0;
+        }
+
+        .image-preview-container:hover .delete-image-btn {
+            opacity: 1;
+        }
+
+        .delete-image-btn:hover {
+            background: rgba(220, 70, 70, 0.9);
+            transform: scale(1.1);
         }
 
         .submit-btn {
@@ -486,12 +538,24 @@
             flex: 1;
         }
 
-        .story-detail-image {
-            max-width: 100%;
-            max-height: 220px;
+        .story-images-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 12px;
+            margin-top: 15px;
+        }
+
+        .story-image {
+            width: 100%;
+            height: 120px;
             border-radius: 8px;
-            margin-top: 10px;
-            display: block;
+            object-fit: cover;
+            transition: all 0.3s;
+        }
+
+        .story-image:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(100, 150, 255, 0.3);
         }
 
         .back-btn {
@@ -759,6 +823,9 @@
                 top: 8px;
                 right: 8px;
             }
+            .images-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
         }
         
         @media (max-width: 480px) {
@@ -800,6 +867,9 @@
                 padding: 9px 16px;
                 font-size: 0.95rem;
                 min-width: 100px;
+            }
+            .images-grid {
+                grid-template-columns: repeat(2, 1fr);
             }
             
             /* 调整主内容区在移动端的间距 */
@@ -866,6 +936,10 @@
                 width: 36px;
                 height: 36px;
             }
+            
+            .images-grid {
+                grid-template-columns: 1fr;
+            }
         }
         
         /* 安全区域适配 */
@@ -897,7 +971,7 @@
     
     <!-- 移动端标题栏 -->
     <div class="mobile-header">
-        <div class="mobile-title">孤雨之境</div>
+        <div class="mobile-title">孤雨之境 · 多图版</div>
         <button class="mobile-menu-btn" id="mobileMenuBtn">
             <i class="fas fa-bars"></i>
         </button>
@@ -906,7 +980,7 @@
     <!-- 主内容区 -->
     <div class="hero">
         <h1 class="title">孤雨之境 · 故事</h1>
-        <p class="subtitle">在雨中，每个故事都像雨滴一样独特而短暂...记录下你的孤雨时刻</p>
+        <p class="subtitle">记录雨中的故事，捕捉雨滴的瞬间...支持多图片上传</p>
         
         <div class="time-container">
             <div class="time-display" id="currentTime">00:00:00</div>
@@ -919,42 +993,42 @@
             <div class="story-card">
                 <div class="card-header">
                     <div class="card-icon">
-                        <i class="fas fa-book-open"></i>
+                        <i class="fas fa-images"></i>
                     </div>
-                    <div class="card-title">雨夜沉思</div>
+                    <div class="card-title">雨中的城市</div>
                 </div>
                 <div class="card-content">
-                    昨夜的雨声伴我入眠，思绪如雨丝般绵长。窗外的雨滴敲打着玻璃，像是在诉说着什么...
+                    城市在雨中变得朦胧而美丽，灯光在水洼中反射出梦幻般的光影...
                 </div>
-                <div class="card-date">2023年10月15日</div>
+                <div class="card-date">2023年11月05日</div>
             </div>
             
             <!-- 故事卡片2 -->
             <div class="story-card">
                 <div class="card-header">
                     <div class="card-icon">
-                        <i class="fas fa-umbrella"></i>
+                        <i class="fas fa-umbrella-beach"></i>
                     </div>
-                    <div class="card-title">雨中邂逅</div>
+                    <div class="card-title">海边雨景</div>
                 </div>
                 <div class="card-content">
-                    那把红色的雨伞，成为阴雨天最亮丽的风景。我们在雨中相遇，短暂却难忘...
+                    雨滴落入大海的怀抱，海天一色，浪花在雨中舞动...
                 </div>
-                <div class="card-date">2023年09月22日</div>
+                <div class="card-date">2023年10月22日</div>
             </div>
             
             <!-- 故事卡片3 -->
             <div class="story-card">
                 <div class="card-header">
                     <div class="card-icon">
-                        <i class="fas fa-coffee"></i>
+                        <i class="fas fa-tree"></i>
                     </div>
-                    <div class="card-title">咖啡馆的雨</div>
+                    <div class="card-title">林间细雨</div>
                 </div>
                 <div class="card-content">
-                    坐在靠窗的位置，看着雨中的行人匆匆。咖啡的香气与雨水的清新交织在一起...
+                    雨滴从树叶滑落，森林在雨中呼吸，空气中弥漫着泥土的芬芳...
                 </div>
-                <div class="card-date">2023年08月30日</div>
+                <div class="card-date">2023年09月18日</div>
             </div>
         </div>
     </div>
@@ -985,13 +1059,14 @@
                 <div class="upload-area" id="uploadArea">
                     <i class="fas fa-cloud-upload-alt upload-icon"></i>
                     <p class="upload-text">点击或拖拽照片到此处</p>
-                    <button type="button" class="upload-btn">选择文件</button>
-                    <input type="file" id="imageUpload" accept="image/*" style="display: none;">
+                    <p class="upload-text" style="color: #8ab6d6; font-size: 0.85rem;">支持多选 (最多9张)</p>
+                    <button type="button" class="upload-btn">选择图片</button>
+                    <input type="file" id="imageUpload" accept="image/*" multiple style="display: none;">
                 </div>
                 
                 <div class="preview-container" id="previewContainer">
-                    <p class="preview-title">预览</p>
-                    <img class="image-preview" id="imagePreview" alt="图片预览">
+                    <p class="preview-title">已选图片 (<span id="imageCount">0</span>张)</p>
+                    <div class="images-grid" id="imagesGrid"></div>
                 </div>
             </div>
             
@@ -1027,11 +1102,11 @@
             <span>首页</span>
         </a>
         <a href="#" class="nav-btn" id="mobileRecordBtn">
-            <i class="fas fa-book"></i>
+            <i class="fas fa-camera"></i>
             <span>记录</span>
         </a>
         <a href="#" class="nav-btn" id="mobileStoriesBtn">
-            <i class="fas fa-history"></i>
+            <i class="fas fa-book"></i>
             <span>故事</span>
         </a>
     </div>
@@ -1114,8 +1189,9 @@
             const closePanel = document.getElementById('closePanel');
             const uploadArea = document.getElementById('uploadArea');
             const imageUpload = document.getElementById('imageUpload');
-            const imagePreview = document.getElementById('imagePreview');
+            const imagesGrid = document.getElementById('imagesGrid');
             const previewContainer = document.getElementById('previewContainer');
+            const imageCount = document.getElementById('imageCount');
             const storyForm = document.getElementById('storyForm');
             const storiesList = document.getElementById('storiesList');
             const storiesContainer = document.getElementById('storiesContainer');
@@ -1127,6 +1203,9 @@
             const mobileRecordBtn = document.getElementById('mobileRecordBtn');
             const mobileStoriesBtn = document.getElementById('mobileStoriesBtn');
             const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+            
+            // 存储当前上传的图片
+            let uploadedImages = [];
             
             // 当前待删除的故事ID
             let storyToDelete = null;
@@ -1174,18 +1253,60 @@
             
             // 文件选择事件
             imageUpload.addEventListener('change', function(e) {
-                if (this.files && this.files[0]) {
-                    const reader = new FileReader();
+                if (this.files && this.files.length > 0) {
+                    // 限制最多9张图片
+                    const files = Array.from(this.files).slice(0, 9);
                     
-                    reader.onload = function(e) {
-                        imagePreview.src = e.target.result;
-                        imagePreview.style.display = 'block';
-                        previewContainer.style.display = 'block';
-                    }
-                    
-                    reader.readAsDataURL(this.files[0]);
+                    files.forEach(file => {
+                        const reader = new FileReader();
+                        
+                        reader.onload = function(e) {
+                            uploadedImages.push(e.target.result);
+                            updateImagePreview();
+                        }
+                        
+                        reader.readAsDataURL(file);
+                    });
                 }
             });
+            
+            // 更新图片预览
+            function updateImagePreview() {
+                imagesGrid.innerHTML = '';
+                
+                uploadedImages.forEach((imageSrc, index) => {
+                    const imageContainer = document.createElement('div');
+                    imageContainer.className = 'image-preview-container';
+                    
+                    imageContainer.innerHTML = `
+                        <img src="${imageSrc}" class="image-preview" alt="图片预览">
+                        <button class="delete-image-btn" data-index="${index}">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    `;
+                    
+                    imagesGrid.appendChild(imageContainer);
+                    
+                    // 添加删除按钮事件
+                    const deleteBtn = imageContainer.querySelector('.delete-image-btn');
+                    deleteBtn.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        const index = parseInt(this.getAttribute('data-index'));
+                        uploadedImages.splice(index, 1);
+                        updateImagePreview();
+                    });
+                });
+                
+                // 更新图片计数
+                imageCount.textContent = uploadedImages.length;
+                
+                // 显示预览容器
+                if (uploadedImages.length > 0) {
+                    previewContainer.style.display = 'flex';
+                } else {
+                    previewContainer.style.display = 'none';
+                }
+            }
             
             // 表单提交
             storyForm.addEventListener('submit', function(e) {
@@ -1200,19 +1321,19 @@
                     title: title,
                     content: content,
                     date: new Date().toLocaleString(),
-                    image: imagePreview.src || null
+                    images: [...uploadedImages]
                 };
                 
                 // 保存故事到本地存储
                 saveStory(story);
                 
                 // 显示成功消息
-                showMessage('故事已保存！在雨中，你的记忆将永存...');
+                showMessage(`故事已保存！包含${uploadedImages.length}张图片`);
                 
                 // 重置表单
                 storyForm.reset();
-                imagePreview.style.display = 'none';
-                previewContainer.style.display = 'none';
+                uploadedImages = [];
+                updateImagePreview();
                 
                 // 关闭面板
                 storyPanel.classList.remove('active');
@@ -1256,6 +1377,9 @@
                             <span class="story-date">${formatDate(story.date)}</span>
                         </div>
                         <div class="story-preview">${previewContent}</div>
+                        <div style="margin-top: 10px; font-size: 0.85rem; color: #8ab6d6;">
+                            <i class="fas fa-image"></i> ${story.images ? story.images.length : 0}张图片
+                        </div>
                         <button class="delete-story-btn" data-id="${story.id}">
                             <i class="fas fa-trash-alt"></i>
                         </button>
@@ -1292,7 +1416,16 @@
                         <div class="story-detail-date">${formatDate(story.date)}</div>
                     </div>
                     <div class="story-detail-content">${story.content}</div>
-                    ${story.image ? `<img src="${story.image}" class="story-detail-image">` : ''}
+                    
+                    ${story.images && story.images.length > 0 ? `
+                        <h4 style="color: #c0d0e0; margin-top: 15px;">故事图片 (${story.images.length}张)</h4>
+                        <div class="story-images-grid">
+                            ${story.images.map(img => `
+                                <img src="${img}" class="story-image" alt="故事图片">
+                            `).join('')}
+                        </div>
+                    ` : ''}
+                    
                     <div style="display: flex; gap: 10px; margin-top: 20px;">
                         <button class="back-btn" id="backToListBtn">
                             <i class="fas fa-arrow-left"></i> 返回列表
@@ -1417,6 +1550,41 @@
             
             // 初始加载示例故事
             loadStories();
+            
+            // 添加拖放功能
+            uploadArea.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                this.style.borderColor = '#5d8aa8';
+                this.style.backgroundColor = 'rgba(10, 25, 41, 0.5)';
+            });
+            
+            uploadArea.addEventListener('dragleave', function() {
+                this.style.borderColor = 'rgba(100, 150, 200, 0.3)';
+                this.style.backgroundColor = '';
+            });
+            
+            uploadArea.addEventListener('drop', function(e) {
+                e.preventDefault();
+                this.style.borderColor = 'rgba(100, 150, 200, 0.3)';
+                this.style.backgroundColor = '';
+                
+                if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+                    const files = Array.from(e.dataTransfer.files).filter(file => 
+                        file.type.startsWith('image/')
+                    ).slice(0, 9);
+                    
+                    files.forEach(file => {
+                        const reader = new FileReader();
+                        
+                        reader.onload = function(e) {
+                            uploadedImages.push(e.target.result);
+                            updateImagePreview();
+                        }
+                        
+                        reader.readAsDataURL(file);
+                    });
+                }
+            });
         };
     </script>
 </body>
