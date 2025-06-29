@@ -410,29 +410,50 @@
             text-overflow: ellipsis;
         }
 
-        .story-content {
+        /* 故事详情样式 */
+        .story-detail-container {
             display: none;
-            background: rgba(10, 25, 41, 0.8);
-            border-radius: 8px;
-            padding: 25px;
+            flex-direction: column;
+            gap: 20px;
             margin-top: 20px;
-            border: 1px solid rgba(100, 150, 200, 0.2);
+            animation: fadeIn 0.5s ease;
         }
 
-        .story-full {
+        .story-detail-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .story-detail-title {
+            font-size: 1.8rem;
+            color: #c0d0e0;
+        }
+
+        .story-detail-date {
+            font-size: 1rem;
+            color: #8a9ba8;
+        }
+
+        .story-detail-content {
             font-size: 1.1rem;
             line-height: 1.7;
             color: #d0e0f0;
             margin-bottom: 20px;
             white-space: pre-wrap;
+            background: rgba(10, 25, 41, 0.3);
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 3px solid #5d8aa8;
         }
 
-        .story-image {
+        .story-detail-image {
             max-width: 100%;
             max-height: 300px;
             border-radius: 8px;
-            margin-top: 20px;
-            display: none;
+            margin-top: 10px;
+            display: block;
         }
 
         .back-btn {
@@ -445,6 +466,7 @@
             transition: all 0.3s;
             margin-top: 20px;
             font-size: 1rem;
+            align-self: flex-start;
         }
 
         .back-btn:hover {
@@ -485,6 +507,11 @@
             0% { text-shadow: 0 0 15px rgba(100, 150, 255, 0.3); }
             100% { text-shadow: 0 0 25px rgba(100, 150, 255, 0.6), 0 0 40px rgba(80, 120, 200, 0.3); }
         }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
 
         /* 响应式设计 */
         @media (max-width: 768px) {
@@ -512,6 +539,9 @@
             }
             .story-panel {
                 width: 320px;
+            }
+            .story-detail-title {
+                font-size: 1.5rem;
             }
         }
         
@@ -636,6 +666,9 @@
             <h3 class="panel-title">你的孤雨故事</h3>
             <div id="storiesContainer"></div>
         </div>
+        
+        <!-- 故事详情容器 -->
+        <div class="story-detail-container" id="storyDetailContainer"></div>
     </div>
 
     <!-- 雨声音频 -->
@@ -724,12 +757,14 @@
             const storiesList = document.getElementById('storiesList');
             const storiesContainer = document.getElementById('storiesContainer');
             const panelTitle = document.getElementById('panelTitle');
+            const storyDetailContainer = document.getElementById('storyDetailContainer');
             
             // 打开故事面板
             recordBtn.addEventListener('click', () => {
                 storyPanel.classList.add('active');
                 storyForm.style.display = 'flex';
                 storiesList.style.display = 'none';
+                storyDetailContainer.style.display = 'none';
                 panelTitle.textContent = '记录孤雨故事';
             });
             
@@ -738,6 +773,7 @@
                 storyPanel.classList.add('active');
                 storyForm.style.display = 'none';
                 storiesList.style.display = 'flex';
+                storyDetailContainer.style.display = 'none';
                 panelTitle.textContent = '孤雨故事集';
                 loadStories();
             });
@@ -865,39 +901,53 @@
                     storyElement.innerHTML = `
                         <div class="story-title">
                             <span>${story.title}</span>
-                            <span class="story-date">${story.date}</span>
+                            <span class="story-date">${formatDate(story.date)}</span>
                         </div>
                         <div class="story-preview">${previewContent}</div>
-                        <div class="story-content" id="content-${story.id}">
-                            <div class="story-full">${story.content}</div>
-                            ${story.image ? `<img src="${story.image}" class="story-image" id="image-${story.id}">` : ''}
-                            <button class="back-btn" onclick="document.querySelector('#storiesContainer').style.display = 'block'; this.parentElement.style.display = 'none'">
-                                <i class="fas fa-arrow-left"></i> 返回列表
-                            </button>
-                        </div>
                     `;
                     
                     storiesContainer.appendChild(storyElement);
                     
                     // 添加点击事件
                     storyElement.addEventListener('click', function() {
-                        const contentId = `content-${story.id}`;
-                        const contentElement = document.getElementById(contentId);
-                        
-                        if (contentElement) {
-                            // 显示完整内容
-                            storiesContainer.style.display = 'none';
-                            contentElement.style.display = 'block';
-                            
-                            // 如果有图片，显示图片
-                            if (story.image) {
-                                const imageElement = document.getElementById(`image-${story.id}`);
-                                if (imageElement) {
-                                    imageElement.style.display = 'block';
-                                }
-                            }
-                        }
+                        showStoryDetail(story);
                     });
+                });
+            }
+            
+            // 显示故事详情
+            function showStoryDetail(story) {
+                storiesList.style.display = 'none';
+                storyDetailContainer.style.display = 'flex';
+                
+                storyDetailContainer.innerHTML = `
+                    <div class="story-detail-header">
+                        <h3 class="story-detail-title">${story.title}</h3>
+                        <div class="story-detail-date">${formatDate(story.date)}</div>
+                    </div>
+                    <div class="story-detail-content">${story.content}</div>
+                    ${story.image ? `<img src="${story.image}" class="story-detail-image">` : ''}
+                    <button class="back-btn" id="backToListBtn">
+                        <i class="fas fa-arrow-left"></i> 返回列表
+                    </button>
+                `;
+                
+                // 添加返回按钮事件
+                document.getElementById('backToListBtn').addEventListener('click', function() {
+                    storyDetailContainer.style.display = 'none';
+                    storiesList.style.display = 'flex';
+                });
+            }
+            
+            // 格式化日期
+            function formatDate(dateString) {
+                const date = new Date(dateString);
+                return date.toLocaleDateString('zh-CN', {
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit',
+                    hour: '2-digit',
+                    minute: '2-digit'
                 });
             }
             
@@ -916,9 +966,17 @@
                 messageElement.style.boxShadow = '0 5px 15px rgba(0,0,0,0.3)';
                 messageElement.style.zIndex = '2000';
                 messageElement.style.border = '1px solid rgba(100, 150, 200, 0.3)';
+                messageElement.style.opacity = '0';
+                messageElement.style.transition = 'opacity 0.5s ease';
                 
                 document.body.appendChild(messageElement);
                 
+                // 淡入效果
+                setTimeout(() => {
+                    messageElement.style.opacity = '1';
+                }, 10);
+                
+                // 3秒后淡出并移除
                 setTimeout(() => {
                     messageElement.style.opacity = '0';
                     setTimeout(() => {
