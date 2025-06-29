@@ -378,6 +378,7 @@
             border: 1px solid rgba(100, 150, 200, 0.2);
             cursor: pointer;
             transition: all 0.3s;
+            position: relative;
         }
 
         .story-item:hover {
@@ -492,6 +493,113 @@
             z-index: 5;
         }
 
+        /* 删除按钮样式 */
+        .delete-story-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(180, 50, 50, 0.2);
+            border: none;
+            border-radius: 4px;
+            color: #ff9b9b;
+            cursor: pointer;
+            padding: 5px 8px;
+            transition: all 0.3s;
+            z-index: 10;
+        }
+
+        .delete-story-btn:hover {
+            background: rgba(200, 70, 70, 0.4);
+            color: #ffcccc;
+        }
+
+        /* 确认删除弹窗 */
+        .delete-confirm-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(10, 20, 30, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+        }
+
+        .delete-confirm-modal.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .delete-confirm-content {
+            background: linear-gradient(135deg, #1a2e42, #0e1e2f);
+            border-radius: 12px;
+            padding: 30px;
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(180, 80, 80, 0.3);
+            transform: translateY(20px);
+            transition: transform 0.3s;
+        }
+
+        .delete-confirm-modal.active .delete-confirm-content {
+            transform: translateY(0);
+        }
+
+        .delete-confirm-title {
+            font-size: 1.8rem;
+            color: #ff9b9b;
+            margin-bottom: 20px;
+        }
+
+        .delete-confirm-text {
+            font-size: 1.1rem;
+            color: #c0d0e0;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .delete-confirm-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .confirm-delete-btn, .cancel-delete-btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+        }
+
+        .confirm-delete-btn {
+            background: linear-gradient(135deg, #c04848, #8c3232);
+            color: #fff;
+        }
+
+        .confirm-delete-btn:hover {
+            background: linear-gradient(135deg, #d05858, #9c4242);
+            transform: translateY(-2px);
+        }
+
+        .cancel-delete-btn {
+            background: linear-gradient(135deg, #4a6572, #344955);
+            color: #e0e0e0;
+        }
+
+        .cancel-delete-btn:hover {
+            background: linear-gradient(135deg, #5a7582, #445965);
+            transform: translateY(-2px);
+        }
+
         /* 动画效果 */
         @keyframes rain-fall {
             0% { transform: translateY(0) translateX(0); opacity: 1; }
@@ -542,6 +650,10 @@
             }
             .story-detail-title {
                 font-size: 1.5rem;
+            }
+            .delete-story-btn {
+                top: 10px;
+                right: 10px;
             }
         }
         
@@ -671,6 +783,18 @@
         <div class="story-detail-container" id="storyDetailContainer"></div>
     </div>
 
+    <!-- 删除确认弹窗 -->
+    <div class="delete-confirm-modal" id="deleteConfirmModal">
+        <div class="delete-confirm-content">
+            <h3 class="delete-confirm-title"><i class="fas fa-exclamation-triangle"></i> 删除故事</h3>
+            <p class="delete-confirm-text">这个故事将像雨滴一样永远消失，不可恢复。你确定要删除吗？</p>
+            <div class="delete-confirm-buttons">
+                <button class="cancel-delete-btn" id="cancelDeleteBtn">取消</button>
+                <button class="confirm-delete-btn" id="confirmDeleteBtn">确认删除</button>
+            </div>
+        </div>
+    </div>
+
     <!-- 雨声音频 -->
     <audio id="rainSound" loop>
         <source src="https://assets.mixkit.co/sfx/preview/mixkit-rain-loop-1243.mp3" type="audio/mpeg">
@@ -758,6 +882,12 @@
             const storiesContainer = document.getElementById('storiesContainer');
             const panelTitle = document.getElementById('panelTitle');
             const storyDetailContainer = document.getElementById('storyDetailContainer');
+            const deleteConfirmModal = document.getElementById('deleteConfirmModal');
+            const cancelDeleteBtn = document.getElementById('cancelDeleteBtn');
+            const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
+            
+            // 当前待删除的故事ID
+            let storyToDelete = null;
             
             // 打开故事面板
             recordBtn.addEventListener('click', () => {
@@ -904,13 +1034,27 @@
                             <span class="story-date">${formatDate(story.date)}</span>
                         </div>
                         <div class="story-preview">${previewContent}</div>
+                        <button class="delete-story-btn" data-id="${story.id}">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
                     `;
                     
                     storiesContainer.appendChild(storyElement);
                     
                     // 添加点击事件
-                    storyElement.addEventListener('click', function() {
-                        showStoryDetail(story);
+                    storyElement.addEventListener('click', function(e) {
+                        // 确保点击的不是删除按钮
+                        if (!e.target.closest('.delete-story-btn')) {
+                            showStoryDetail(story);
+                        }
+                    });
+                    
+                    // 为删除按钮添加事件
+                    const deleteBtn = storyElement.querySelector('.delete-story-btn');
+                    deleteBtn.addEventListener('click', function(e) {
+                        e.stopPropagation(); // 阻止冒泡，避免触发故事项点击事件
+                        storyToDelete = story.id;
+                        deleteConfirmModal.classList.add('active');
                     });
                 });
             }
@@ -927,9 +1071,14 @@
                     </div>
                     <div class="story-detail-content">${story.content}</div>
                     ${story.image ? `<img src="${story.image}" class="story-detail-image">` : ''}
-                    <button class="back-btn" id="backToListBtn">
-                        <i class="fas fa-arrow-left"></i> 返回列表
-                    </button>
+                    <div style="display: flex; gap: 10px; margin-top: 20px;">
+                        <button class="back-btn" id="backToListBtn">
+                            <i class="fas fa-arrow-left"></i> 返回列表
+                        </button>
+                        <button class="delete-story-btn" id="deleteInDetailBtn" style="position: static;">
+                            <i class="fas fa-trash-alt"></i> 删除故事
+                        </button>
+                    </div>
                 `;
                 
                 // 添加返回按钮事件
@@ -937,7 +1086,48 @@
                     storyDetailContainer.style.display = 'none';
                     storiesList.style.display = 'flex';
                 });
+                
+                // 添加详情页删除按钮事件
+                document.getElementById('deleteInDetailBtn').addEventListener('click', function() {
+                    storyToDelete = story.id;
+                    deleteConfirmModal.classList.add('active');
+                });
             }
+            
+            // 删除故事
+            function deleteStory(storyId) {
+                let stories = JSON.parse(localStorage.getItem('rainStories')) || [];
+                stories = stories.filter(story => story.id !== storyId);
+                localStorage.setItem('rainStories', JSON.stringify(stories));
+                
+                // 关闭确认弹窗
+                deleteConfirmModal.classList.remove('active');
+                
+                // 显示删除成功消息
+                showMessage('故事已删除...如雨滴消逝在风中');
+                
+                // 重新加载故事列表
+                loadStories();
+                
+                // 如果当前在详情页，返回列表
+                if (storyDetailContainer.style.display === 'flex') {
+                    storyDetailContainer.style.display = 'none';
+                    storiesList.style.display = 'flex';
+                }
+            }
+            
+            // 确认删除按钮事件
+            confirmDeleteBtn.addEventListener('click', function() {
+                if (storyToDelete) {
+                    deleteStory(storyToDelete);
+                }
+            });
+            
+            // 取消删除按钮事件
+            cancelDeleteBtn.addEventListener('click', function() {
+                deleteConfirmModal.classList.remove('active');
+                storyToDelete = null;
+            });
             
             // 格式化日期
             function formatDate(dateString) {
